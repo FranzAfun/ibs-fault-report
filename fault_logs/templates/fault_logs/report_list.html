@@ -1,0 +1,126 @@
+{% extends 'fault_logs/base.html' %}
+{% load static %}
+
+{% block title %}Fault Report Log | IBS{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <header class="panel-header">
+        <div>
+            <h1>Fault Report Log</h1>
+            <p>Centralized operational table for all IBS fault records and current resolution status.</p>
+        </div>
+        <a class="btn btn--primary" href="{% url 'fault_logs:faultreport-create' %}">Submit Fault Report</a>
+    </header>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Ref No.</th>
+                    <th>Report Date</th>
+                    <th>Report Time</th>
+                    <th>Reporter's Name</th>
+                    <th>Role</th>
+                    <th>Reporter's Contact</th>
+                    <th>Location</th>
+                    <th>Action Taken By</th>
+                    <th>Status</th>
+                    <th>Date of Resolution</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in fault_reports %}
+                    <tr>
+                        <td class="mono-text ref-cell">{{ report.reference_number }}</td>
+                        <td>{{ report.report_date|date:'D, F j, Y' }}</td>
+                        <td>{{ report.report_time|time:'H:i' }}</td>
+                        <td class="truncate-cell" title="{{ report.reporter_name }}">{{ report.reporter_name }}</td>
+                        <td>{{ report.role }}</td>
+                        <td class="truncate-cell" title="{{ report.reporter_contact }}">{{ report.reporter_contact }}</td>
+                        <td class="truncate-cell" title="{{ report.location }}">{{ report.location }}</td>
+                        <td>{{ report.action_taken_by|default:'-' }}</td>
+                        <td>
+                            <span class="status-pill status-pill--{{ report.status|lower|slugify }}">{{ report.get_status_display }}</span>
+                        </td>
+                        <td>{{ report.date_of_resolution|date:'D, F j, Y'|default:'-' }}</td>
+                        <td class="actions-cell">
+                            <div class="actions-row">
+                                <a
+                                    class="btn btn--sm btn--primary"
+                                    href="{% url 'fault_logs:faultreport-detail' report.pk %}"
+                                    aria-label="View report {{ report.reference_number }}"
+                                    title="View"
+                                >
+                                    <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                                </a>
+                                <a
+                                    class="btn btn--sm btn--secondary"
+                                    href="{% url 'fault_logs:faultreport-update' report.pk %}"
+                                    aria-label="Edit report {{ report.reference_number }}"
+                                    title="Edit"
+                                >
+                                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                                </a>
+                                <button
+                                    type="button"
+                                    class="btn btn--sm btn--ghost js-delete-trigger"
+                                    data-delete-url="{% url 'fault_logs:faultreport-delete' report.pk %}"
+                                    data-reference="{{ report.reference_number }}"
+                                    aria-label="Delete report {{ report.reference_number }}"
+                                    title="Delete"
+                                >
+                                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="11" class="empty-row">No fault reports have been logged yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+        <nav class="pagination" aria-label="Report pagination">
+            {% if page_obj.has_previous %}
+                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+
+    <div id="deleteConfirmModal" class="confirm-modal" hidden>
+        <div class="confirm-modal-panel" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+            <div class="confirm-modal-header">
+                <h2 id="delete-modal-title">Confirm Delete</h2>
+            </div>
+            <div class="confirm-modal-body">
+                <p>
+                    You are about to delete fault report
+                    <strong id="delete-modal-reference"></strong>.
+                    This action cannot be undone.
+                </p>
+            </div>
+            <div class="confirm-modal-actions">
+                <button type="button" class="btn btn--secondary js-modal-cancel">Cancel</button>
+                <form id="deleteConfirmForm" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn--danger">Delete Report</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'fault_logs/js/delete_confirm_modal.js' %}"></script>
+{% endblock %}

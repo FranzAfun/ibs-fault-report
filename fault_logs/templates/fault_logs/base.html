@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}IBS Fault Report Management{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="{% static 'fault_logs/css/fault_logs.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a class="brand" href="{% url 'fault_logs:faultreport-list' %}">
+                <span class="brand-kicker">IBS Operations</span>
+                <span class="brand-title">Fault Report Management</span>
+            </a>
+            <nav class="main-nav" aria-label="Primary">
+                <a href="{% url 'fault_logs:faultreport-list' %}">Report Log</a>
+                <a href="{% url 'fault_logs:faultreport-create' %}">New Submission</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        {% if messages %}
+            <section class="messages" aria-label="Notifications">
+                {% for message in messages %}
+                    <div class="message message-{{ message.tags|default:'info' }}">{{ message }}</div>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <p>IBS Fault Report 2026 | v0.1.1</p>
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
