@@ -14,25 +14,12 @@ import os
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-def _load_dotenv(env_path: Path) -> None:
-    """Load key=value pairs from a local .env file without overriding OS env."""
-    if not env_path.exists():
-        return
-
-    for raw_line in env_path.read_text(encoding='utf-8').splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith('#') or '=' not in line:
-            continue
-
-        key, value = line.split('=', 1)
-        key = key.strip()
-        value = value.strip().strip('"').strip("'")
-        os.environ.setdefault(key, value)
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+load_dotenv(BASE_DIR / '.env', override=False)
 
 
 def _env_bool(name: str, default: bool = False) -> bool:
@@ -45,10 +32,6 @@ def _env_bool(name: str, default: bool = False) -> bool:
 def _env_list(name: str, default: str = '') -> list[str]:
     raw = os.getenv(name, default)
     return [item.strip() for item in raw.split(',') if item.strip()]
-
-
-_load_dotenv(BASE_DIR / '.env')
-
 
 # Deployment-ready settings with environment-based overrides.
 
