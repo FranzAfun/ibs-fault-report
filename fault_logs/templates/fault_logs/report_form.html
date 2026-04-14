@@ -27,11 +27,6 @@
             <h2>Report Identification</h2>
             <div class="field-grid two-col">
                 <div class="field-block">
-                    <label for="{{ form.reference_number.id_for_label }}">{{ form.reference_number.label }}</label>
-                    {{ form.reference_number }}
-                    {% for error in form.reference_number.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
-                </div>
-                <div class="field-block">
                     <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
                     {{ form.status }}
                     {% for error in form.status.errors %}<p class="field-error">{{ error }}</p>{% endfor %}

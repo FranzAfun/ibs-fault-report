@@ -39,7 +39,7 @@ class FaultReport(models.Model):
         RESOLVED = 'RESOLVED', 'Resolved'
         CLOSED = 'CLOSED', 'Closed'
 
-    reference_number = models.CharField(max_length=64, unique=True, db_index=True)
+    reference_number = models.CharField(max_length=64, unique=True, db_index=True, blank=True)
     report_date = models.DateField(db_index=True)
     report_time = models.TimeField()
     reporter_name = models.CharField(max_length=150)
@@ -72,6 +72,17 @@ class FaultReport(models.Model):
         indexes = [
             models.Index(fields=['status', 'report_date']),
         ]
+
+    @classmethod
+    def _next_reference(cls, report_date) -> str:
+        prefix = f'FR-{report_date.strftime("%Y%m%d")}'
+        count = cls.objects.filter(reference_number__startswith=prefix).count()
+        return f'{prefix}-{count + 1:04d}'
+
+    def save(self, *args, **kwargs):
+        if not self.reference_number:
+            self.reference_number = self._next_reference(self.report_date)
+        super().save(*args, **kwargs)
 
     def clean(self) -> None:
         resolved_statuses = {self.Status.RESOLVED, self.Status.CLOSED}

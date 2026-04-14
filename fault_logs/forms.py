@@ -52,7 +52,6 @@ class FaultReportForm(forms.ModelForm):
     class Meta:
         model = FaultReport
         fields = [
-            'reference_number',
             'report_date',
             'report_time',
             'reporter_name',
@@ -67,7 +66,6 @@ class FaultReportForm(forms.ModelForm):
             'date_of_resolution',
         ]
         labels = {
-            'reference_number': 'Reference Number',
             'report_date': 'Report Date',
             'report_time': 'Report Time',
             'reporter_name': 'Reporter Name',
