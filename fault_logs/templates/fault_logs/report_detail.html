@@ -15,110 +15,112 @@
         </div>
     </header>
 
-    <div class="document-section">
-        <h2>Report Identification</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <div class="detail-label">Reference Number</div>
-                <div class="detail-value mono-text">{{ fault_report.reference_number }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">Status</div>
-                <div class="detail-value">
-                    <span class="status-pill status-pill--{{ fault_report.get_status_display|slugify }}">{{ fault_report.get_status_display }}</span>
+    <div class="document-body">
+        <div class="document-section">
+            <h2>Report Identification</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Reference Number</div>
+                    <div class="detail-value mono-text">{{ fault_report.reference_number }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">
+                        <span class="status-pill status-pill--{{ fault_report.get_status_display|slugify }}">{{ fault_report.get_status_display }}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Report Date</div>
+                    <div class="detail-value">{{ fault_report.report_date|date:'D, F j, Y' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Report Time</div>
+                    <div class="detail-value">{{ fault_report.report_time|time:'H:i' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date of Resolution</div>
+                    <div class="detail-value">{{ fault_report.date_of_resolution|date:'D, F j, Y'|default:'-' }}</div>
                 </div>
             </div>
-            <div class="detail-item">
-                <div class="detail-label">Report Date</div>
-                <div class="detail-value">{{ fault_report.report_date|date:'D, F j, Y' }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">Report Time</div>
-                <div class="detail-value">{{ fault_report.report_time|time:'H:i' }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">Date of Resolution</div>
-                <div class="detail-value">{{ fault_report.date_of_resolution|date:'D, F j, Y'|default:'-' }}</div>
-            </div>
         </div>
-    </div>
 
-    <div class="document-section">
-        <h2>Reporter Information</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <div class="detail-label">Reporter Name</div>
-                <div class="detail-value">{{ fault_report.reporter_name }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">Role</div>
-                <div class="detail-value">{{ fault_report.role }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">Reporter Contact</div>
-                <div class="detail-value">{{ fault_report.reporter_contact }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">Location</div>
-                <div class="detail-value">{{ fault_report.location }}</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="document-section">
-        <h2>Investigation and Action</h2>
-        <div class="detail-grid">
-            <div class="detail-item" style="grid-column: 1 / -1;">
-                <div class="detail-label">Complaint Summary</div>
-                <div class="detail-value">{{ fault_report.complaint_summary|linebreaksbr }}</div>
-            </div>
-            <div class="detail-item" style="grid-column: 1 / -1;">
-                <div class="detail-label">Investigation &amp; Findings</div>
-                <div class="detail-value">{{ fault_report.investigation_findings|default:'-'|linebreaksbr }}</div>
-            </div>
-            <div class="detail-item" style="grid-column: 1 / -1;">
-                <div class="detail-label">Resolution</div>
-                <div class="detail-value">{{ fault_report.resolution|default:'-'|linebreaksbr }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-label">Action Taken By</div>
-                <div class="detail-value">{{ fault_report.action_taken_by|default:'-' }}</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="document-section">
-        <h2>Imported Files</h2>
-        {% with attachments=fault_report.attachments.all %}
-            {% if attachments %}
-                <div class="attachment-list">
-                    {% for attachment in attachments %}
-                        <article class="attachment-item">
-                            <div class="attachment-meta">
-                                <h4 title="{{ attachment.filename }}">{{ attachment.filename }}</h4>
-                                <p>{{ attachment.file_size_display }} • {{ attachment.uploaded_at|date:'D, M j, Y H:i' }}</p>
-                            </div>
-                            <div class="attachment-actions">
-                                <a class="btn btn--sm btn--ghost" href="{{ attachment.file.url }}" target="_blank" rel="noopener">Open</a>
-                                <button
-                                    type="button"
-                                    class="btn btn--sm btn--danger js-delete-trigger"
-                                    data-delete-url="{% url 'fault_logs:attachment-delete' attachment.pk %}"
-                                    data-reference="{{ attachment.filename }}"
-                                    data-delete-type="file attachment"
-                                    data-delete-button="Delete File"
-                                    data-next-url="{{ request.get_full_path }}"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </article>
-                    {% endfor %}
+        <div class="document-section">
+            <h2>Reporter Information</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Reporter Name</div>
+                    <div class="detail-value">{{ fault_report.reporter_name }}</div>
                 </div>
-            {% else %}
-                <p class="muted-text">No files have been imported for this report.</p>
-            {% endif %}
-        {% endwith %}
+                <div class="detail-item">
+                    <div class="detail-label">Role</div>
+                    <div class="detail-value">{{ fault_report.role }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Reporter Contact</div>
+                    <div class="detail-value">{{ fault_report.reporter_contact }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">{{ fault_report.location }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Investigation and Action</h2>
+            <div class="detail-grid">
+                <div class="detail-item" style="grid-column: 1 / -1;">
+                    <div class="detail-label">Complaint Summary</div>
+                    <div class="detail-value">{{ fault_report.complaint_summary|linebreaksbr }}</div>
+                </div>
+                <div class="detail-item" style="grid-column: 1 / -1;">
+                    <div class="detail-label">Investigation &amp; Findings</div>
+                    <div class="detail-value">{{ fault_report.investigation_findings|default:'-'|linebreaksbr }}</div>
+                </div>
+                <div class="detail-item" style="grid-column: 1 / -1;">
+                    <div class="detail-label">Resolution</div>
+                    <div class="detail-value">{{ fault_report.resolution|default:'-'|linebreaksbr }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Action Taken By</div>
+                    <div class="detail-value">{{ fault_report.action_taken_by|default:'-' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Imported Files</h2>
+            {% with attachments=fault_report.attachments.all %}
+                {% if attachments %}
+                    <div class="attachment-list">
+                        {% for attachment in attachments %}
+                            <article class="attachment-item">
+                                <div class="attachment-meta">
+                                    <h4 title="{{ attachment.filename }}">{{ attachment.filename }}</h4>
+                                    <p>{{ attachment.file_size_display }} • {{ attachment.uploaded_at|date:'D, M j, Y H:i' }}</p>
+                                </div>
+                                <div class="attachment-actions">
+                                    <a class="btn btn--sm btn--ghost" href="{{ attachment.file.url }}" target="_blank" rel="noopener">Open</a>
+                                    <button
+                                        type="button"
+                                        class="btn btn--sm btn--danger js-delete-trigger"
+                                        data-delete-url="{% url 'fault_logs:attachment-delete' attachment.pk %}"
+                                        data-reference="{{ attachment.filename }}"
+                                        data-delete-type="file attachment"
+                                        data-delete-button="Delete File"
+                                        data-next-url="{{ request.get_full_path }}"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="muted-text">No files have been imported for this report.</p>
+                {% endif %}
+            {% endwith %}
+        </div>
     </div>
 </section>
 {% endblock %}
