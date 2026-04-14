@@ -1,0 +1,82 @@
+{% extends "fault_logs/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2>PPE Issue Record</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- EMPLOYEE INFO -->
+        <h3>Employee Information</h3>
+
+        <div class="form-group">
+            <label>Employee Name</label>
+            {{ form.employee_name }}
+        </div>
+
+        <div class="form-group">
+            <label>Project</label>
+            {{ form.project }}
+        </div>
+
+        <div class="form-group">
+            <label>Job Title</label>
+            {{ form.job_title }}
+        </div>
+
+        <!-- SAFETY TEXT -->
+        <div style="margin-top:20px; margin-bottom:20px;">
+            <p><strong>Note:</strong> this form should be retained in the staff member's personal file.</p>
+
+            <p>
+                The PPE listed below has been issued to the above named employee in accordance
+                with the Management of Health and Safety at Work Regulations 1999 and the
+                Personal Protective Equipment at Work Regulations 1992.
+            </p>
+
+            <p>The employee has a responsibility to:</p>
+            <ul>
+                <li>take reasonable care of the PPE provided;</li>
+                <li>use PPE in accordance with the training and instruction given;</li>
+                <li>keep the PPE clean and return it to its place of storage after use; and</li>
+                <li>report any loss or defect immediately.</li>
+            </ul>
+        </div>
+
+        <!-- PPE ITEMS -->
+        <h3>PPE Items</h3>
+
+        {{ formset.management_form }}
+
+        <table style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Type of PPE Issued</th>
+                    <th>Date Issued</th>
+                    <th>Employee Signature</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                <tr>
+                    <td>{{ form.ppe_type }}</td>
+                    <td>{{ form.date_issued }}</td>
+                    <td>{{ form.employee_signature }}</td>
+                    <td>{{ form.DELETE }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div style="margin-top:20px;">
+            <button type="submit">Submit</button>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}
