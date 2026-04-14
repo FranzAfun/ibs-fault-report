@@ -2,33 +2,36 @@
 
 {% block content %}
 
-<div class="container">
+<div class="page-container">
+<div class="content-container">
 
-    <h2>PPE Issue Record</h2>
+    <h2 class="page-title">PPE Issue Record</h2>
 
     <form method="post">
         {% csrf_token %}
 
-        <!-- EMPLOYEE INFO -->
-        <h3>Employee Information</h3>
+        <div class="form-section">
+            <h3 class="section-title">Employee Information</h3>
 
-        <div class="form-group">
-            <label>Employee Name</label>
-            {{ form.employee_name }}
+            <div class="form-grid">
+                <div>
+                    <label class="form-label">Employee Name</label>
+                    {{ form.employee_name }}
+                </div>
+
+                <div>
+                    <label class="form-label">Project</label>
+                    {{ form.project }}
+                </div>
+
+                <div>
+                    <label class="form-label">Job Title</label>
+                    {{ form.job_title }}
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label>Project</label>
-            {{ form.project }}
-        </div>
-
-        <div class="form-group">
-            <label>Job Title</label>
-            {{ form.job_title }}
-        </div>
-
-        <!-- SAFETY TEXT -->
-        <div style="margin-top:20px; margin-bottom:20px;">
+        <div class="info-box">
             <p><strong>Note:</strong> this form should be retained in the staff member's personal file.</p>
 
             <p>
@@ -38,45 +41,49 @@
             </p>
 
             <p>The employee has a responsibility to:</p>
-            <ul>
-                <li>take reasonable care of the PPE provided;</li>
-                <li>use PPE in accordance with the training and instruction given;</li>
-                <li>keep the PPE clean and return it to its place of storage after use; and</li>
-                <li>report any loss or defect immediately.</li>
-            </ul>
+            <div class="info-text">
+                <p>Take reasonable care of the PPE provided.</p>
+                <p>Use PPE in accordance with training and instructions given.</p>
+                <p>Keep PPE clean and return it to its place of storage after use.</p>
+                <p>Report any loss or defect immediately.</p>
+            </div>
         </div>
 
-        <!-- PPE ITEMS -->
-        <h3>PPE Items</h3>
+        <div class="form-section">
+            <h3 class="section-title">PPE Items</h3>
 
-        {{ formset.management_form }}
+            {{ formset.management_form }}
 
-        <table style="width:100%; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th>Type of PPE Issued</th>
-                    <th>Date Issued</th>
-                    <th>Employee Signature</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in formset %}
-                <tr>
-                    <td>{{ form.ppe_type }}</td>
-                    <td>{{ form.date_issued }}</td>
-                    <td>{{ form.employee_signature }}</td>
-                    <td>{{ form.DELETE }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Type of PPE Issued</th>
+                        <th>Date Issued</th>
+                        <th>Employee Signature</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in formset %}
+                    <tr>
+                        <td>{{ form.ppe_type }}</td>
+                        <td>{{ form.date_issued }}</td>
+                        <td>{{ form.employee_signature }}</td>
+                        <td>{{ form.DELETE }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-        <div style="margin-top:20px;">
-            <button type="submit">Submit</button>
+        <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+            <button type="submit" class="btn btn-primary">
+                Submit Record
+            </button>
         </div>
 
     </form>
 
+</div>
 </div>
 {% endblock %}
