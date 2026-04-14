@@ -12,7 +12,7 @@
         <a class="btn btn--secondary" href="{% url 'fault_logs:faultreport-list' %}">Back to Log</a>
     </header>
 
-    <form method="post" novalidate class="report-form">
+    <form method="post" novalidate class="report-form" enctype="multipart/form-data">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
@@ -104,6 +104,52 @@
                     {% for error in form.action_taken_by.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
                 </div>
             </div>
+        </section>
+
+        <section class="document-section">
+            <h2>Attachments</h2>
+            <p class="helper-text">Upload PDF, image, and common office files for this report.</p>
+            <div class="field-grid one-col">
+                <div class="field-block">
+                    <label for="{{ form.attachments.id_for_label }}">Supporting Files</label>
+                    {{ form.attachments }}
+                    {% if form.attachments.help_text %}
+                        <p class="helper-text">{{ form.attachments.help_text }}</p>
+                    {% endif %}
+                    {% for error in form.attachments.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+
+            {% if object %}
+                {% with existing_attachments=object.attachments.all %}
+                    {% if existing_attachments %}
+                        <div class="attachment-list">
+                            {% for attachment in existing_attachments %}
+                                <article class="attachment-item">
+                                    <div class="attachment-meta">
+                                        <h4 title="{{ attachment.filename }}">{{ attachment.filename }}</h4>
+                                        <p>{{ attachment.file_size_display }} • {{ attachment.uploaded_at|date:'D, M j, Y H:i' }}</p>
+                                    </div>
+                                    <div class="attachment-actions">
+                                        <a class="btn btn--sm btn--ghost" href="{{ attachment.file.url }}" target="_blank" rel="noopener">Open</a>
+                                        <button
+                                            type="button"
+                                            class="btn btn--sm btn--danger js-delete-trigger"
+                                            data-delete-url="{% url 'fault_logs:attachment-delete' attachment.pk %}"
+                                            data-reference="{{ attachment.filename }}"
+                                            data-delete-type="file attachment"
+                                            data-delete-button="Delete File"
+                                            data-next-url="{{ request.get_full_path }}"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
         </section>
 
         <div class="form-actions">
