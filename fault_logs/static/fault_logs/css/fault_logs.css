@@ -981,3 +981,123 @@ a:hover {
 .btn-primary:hover {
   background: #0b5ed7;
 }
+
+/* ===== ACTION BUTTONS (GLOBAL STANDARD) ===== */
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  margin-right: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+/* VIEW */
+.view-btn {
+  background: #198754;
+  color: white;
+}
+
+/* EDIT */
+.edit-btn {
+  background: #2563eb;
+  color: white;
+}
+
+/* DELETE */
+.delete-btn {
+  background: #dc2626;
+  color: white;
+}
+
+/* HOVER EFFECT (CLEAN + MODERN) */
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  opacity: 0.95;
+}
+
+/* ACTIVE CLICK FEEDBACK */
+.action-btn:active {
+  transform: scale(0.95);
+  box-shadow: none;
+}
+
+/* ===== CARD CONTAINER (MATCH FAULT LOG STYLE) ===== */
+
+.card-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.card-subtext {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #6c757d;
+}
+
+/* TABLE SPACING INSIDE CARD */
+
+.card-container .data-table {
+  margin-top: 10px;
+}
+
+.card-container .data-table tbody tr:hover {
+  background: #f9fafb;
+  transition: 0.2s;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.success {
+  background: #e6f4ea;
+  color: #2e7d32;
+}
+
+.status-badge.warning {
+  background: #fff4e5;
+  color: #b26a00;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.success {
+  background: #e6f4ea;
+  color: #2e7d32;
+}
+
+.status-badge.warning {
+  background: #fff4e5;
+  color: #b26a00;
+}

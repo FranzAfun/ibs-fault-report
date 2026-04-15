@@ -5,38 +5,71 @@
 <div class="page-container">
 <div class="content-container">
 
-    <h2 class="page-title">PPE Issue Records</h2>
+    <div class="card-container">
 
-    <div style="display:flex; justify-content:flex-end; margin-bottom:15px;">
-        <a href="{% url 'ppe_records:ppe-create' %}" class="btn btn-primary">
-            New PPE Record
-        </a>
+        <div class="card-header">
+            <div>
+                <h3>PPE Issue Records</h3>
+                <p class="card-subtext">
+                    Centralized table for all PPE issuance records.
+                </p>
+            </div>
+
+            <a href="{% url 'ppe_records:ppe-create' %}" class="btn btn-primary">
+                New PPE Record
+            </a>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Project</th>
+                    <th>Job Title</th>
+                    <th>Date Created</th>
+                    <th>SIGNATURE</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.employee_name }}</td>
+                    <td>{{ record.project }}</td>
+                    <td>{{ record.job_title }}</td>
+                    <td>{{ record.created_at|date:"Y-m-d H:i" }}</td>
+
+                    <td>
+                        {% if record.total_items > 0 and record.total_items == record.signed_items %}
+                            <span class="status-badge success">Signed</span>
+                        {% else %}
+                            <span class="status-badge warning">Pending</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'ppe_records:ppe-detail' record.pk %}" class="action-btn view-btn">
+                            <i class="fas fa-eye"></i>
+                        </a>
+
+                        <a href="{% url 'ppe_records:ppe-edit' record.pk %}" class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a href="{% url 'ppe_records:ppe-delete' record.pk %}" class="action-btn delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No PPE records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
     </div>
-
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>Employee</th>
-                <th>Project</th>
-                <th>Job Title</th>
-                <th>Date Created</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in records %}
-            <tr onclick="window.location='{% url 'ppe_records:ppe-detail' record.pk %}'" style="cursor:pointer;">
-                <td>{{ record.employee_name }}</td>
-                <td>{{ record.project }}</td>
-                <td>{{ record.job_title }}</td>
-                <td>{{ record.created_at|date:"Y-m-d H:i" }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No PPE records found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
 </div>
 </div>

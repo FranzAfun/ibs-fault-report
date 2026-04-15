@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import Count, Q
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, render
 from django.views import View
@@ -12,7 +13,12 @@ class PPEIssueListView(ListView):
 	model = PPEIssueRecord
 	template_name = 'ppe_records/ppe_list.html'
 	context_object_name = 'records'
-	ordering = ['-created_at']
+
+	def get_queryset(self):
+		return PPEIssueRecord.objects.annotate(
+			total_items=Count('items'),
+			signed_items=Count('items', filter=~Q(items__employee_signature='')),
+		).order_by('-created_at')
 
 
 class PPEIssueDetailView(DetailView):
