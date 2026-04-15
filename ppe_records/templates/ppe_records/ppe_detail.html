@@ -3,61 +3,79 @@
 {% block content %}
 
 <div class="page-container">
-<div class="content-container">
+<div class="content-container ppe-detail-page">
 
-    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-        <a href="{% url 'ppe_records:ppe-list' %}" class="btn">
-            Back
-        </a>
-
+    <div class="page-header">
         <div>
-            <a href="{% url 'ppe_records:ppe-edit' record.pk %}" class="btn btn-primary">
-                Edit
+            <a href="{% url 'ppe_records:ppe-list' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Records
             </a>
 
-            <a href="{% url 'ppe_records:ppe-delete' record.pk %}" class="btn" style="background:#dc3545; color:white;">
+            <h2>PPE Record Detail</h2>
+        </div>
+
+        <div class="header-actions">
+            <a href="{% url 'ppe_records:ppe-edit' record.id %}" class="btn btn-primary">Edit</a>
+            <button
+                type="button"
+                class="btn btn-danger js-delete-trigger"
+                data-delete-url="{% url 'ppe_records:ppe-delete' record.id %}"
+                data-reference="{{ record.employee_name|default:'PPE record' }}"
+                data-delete-type="PPE record"
+                data-delete-button="Delete Record"
+                title="Delete"
+            >
                 Delete
-            </a>
+            </button>
         </div>
     </div>
 
-    <h2 class="page-title">PPE Record Detail</h2>
+    <div class="card-container">
+        <!-- Employee Info -->
+        <div class="detail-section">
+            <h3>Employee Information</h3>
 
-    <!-- EMPLOYEE INFO -->
-    <div class="form-section">
-        <h3 class="section-title">Employee Information</h3>
+            <div class="detail-grid">
+                <div><strong>Name:</strong> {{ record.employee_name }}</div>
+                <div><strong>Project:</strong> {{ record.project }}</div>
+                <div><strong>Job Title:</strong> {{ record.job_title }}</div>
+            </div>
+        </div>
 
-        <p><strong>Name:</strong> {{ record.employee_name }}</p>
-        <p><strong>Project:</strong> {{ record.project }}</p>
-        <p><strong>Job Title:</strong> {{ record.job_title }}</p>
-    </div>
+        <!-- PPE Items -->
+        <div class="detail-section">
+            <h3>PPE Items</h3>
 
-    <!-- PPE ITEMS -->
-    <div class="form-section">
-        <h3 class="section-title">PPE Items</h3>
-
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Date Issued</th>
-                    <th>Employee Signature</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in record.items.all %}
-                <tr>
-                    <td>{{ item.ppe_type }}</td>
-                    <td>{{ item.date_issued }}</td>
-                    <td>{{ item.employee_signature }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3">No items recorded.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Date Issued</th>
+                        <th>Employee Signature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in record.items.all %}
+                    <tr>
+                        <td>{{ item.ppe_type }}</td>
+                        <td>{{ item.date_issued }}</td>
+                        <td>
+                            {% if item.employee_signature %}
+                                <span class="status-badge success">Signed</span>
+                            {% else %}
+                                <span class="status-badge warning">Not Signed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No items recorded.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>

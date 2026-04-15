@@ -5,6 +5,15 @@
 <div class="page-container">
 <div class="content-container">
 
+    {% if not is_edit %}
+    <div style="margin-bottom: 12px;">
+        <a href="{% url 'ppe_records:ppe-list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Back to Records
+        </a>
+    </div>
+    {% endif %}
+
     <h2 class="page-title">
         {% if is_edit %}Edit PPE Record{% else %}PPE Issue Record{% endif %}
     </h2>
@@ -33,21 +42,28 @@
             </div>
         </div>
 
-        <div class="info-box">
-            <p><strong>Note:</strong> this form should be retained in the staff member's personal file.</p>
-
-            <p>
-                The PPE listed below has been issued to the above named employee in accordance
-                with the Management of Health and Safety at Work Regulations 1999 and the
-                Personal Protective Equipment at Work Regulations 1992.
+        <div class="ppe-note">
+            <p class="note-title">
+                Note
             </p>
 
-            <p>The employee has a responsibility to:</p>
-            <div class="info-text">
-                <p>Take reasonable care of the PPE provided.</p>
-                <p>Use PPE in accordance with training and instructions given.</p>
-                <p>Keep PPE clean and return it to its place of storage after use.</p>
-                <p>Report any loss or defect immediately.</p>
+            <p class="note-text">
+                This form should be retained in the staff member's personal file.
+            </p>
+
+            <p class="note-text">
+                The PPE listed below has been issued in accordance with applicable health and safety regulations.
+            </p>
+
+            <div class="note-section">
+                <p class="note-subtitle">Employee responsibilities:</p>
+
+                <ul class="note-list">
+                    <li>Take reasonable care of issued PPE</li>
+                    <li>Use PPE according to training and instructions</li>
+                    <li>Keep PPE clean and return after use</li>
+                    <li>Report any loss or defect immediately</li>
+                </ul>
             </div>
         </div>
 
@@ -62,20 +78,42 @@
                         <th>Type of PPE Issued</th>
                         <th>Date Issued</th>
                         <th>Employee Signature</th>
-                        <th>Delete</th>
+                        <th aria-label="Actions"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="ppe-items-body">
                     {% for form in formset %}
-                    <tr>
+                    <tr class="ppe-item-row">
                         <td>{{ form.ppe_type }}</td>
                         <td>{{ form.date_issued }}</td>
                         <td>{{ form.employee_signature }}</td>
-                        <td>{{ form.DELETE }}</td>
+                        <td>
+                            <span style="display:none;">{{ form.id }}{{ form.DELETE }}</span>
+                            <button type="button" class="icon-btn icon-btn-danger remove-row" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
+            <button type="button" id="add-item" class="btn btn-secondary" style="margin-top: 12px;">
+                + Add PPE Item
+            </button>
+
+            <script type="text/template" id="empty-form-template">
+                <tr class="ppe-item-row">
+                    <td>__PPE_TYPE__</td>
+                    <td>__DATE__</td>
+                    <td>__SIGNATURE__</td>
+                    <td>
+                        <button type="button" class="icon-btn icon-btn-danger remove-row" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </script>
         </div>
 
         <div style="margin-top:20px; display:flex; justify-content:flex-end;">
@@ -88,4 +126,63 @@
 
 </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const addBtn = document.getElementById("add-item");
+    const tableBody = document.getElementById("ppe-items-body");
+    const totalForms = document.getElementById("id_items-TOTAL_FORMS");
+
+    function visibleRowCount() {
+        return Array.from(tableBody.querySelectorAll(".ppe-item-row")).filter(row => row.style.display !== "none").length;
+    }
+
+    addBtn.addEventListener("click", function () {
+        let formIdx = parseInt(totalForms.value, 10);
+
+        let newRow = tableBody.children[0].cloneNode(true);
+
+        newRow.innerHTML = newRow.innerHTML.replace(/items-0/g, `items-${formIdx}`);
+        newRow.innerHTML = newRow.innerHTML.replace(/id_items-0/g, `id_items-${formIdx}`);
+
+        newRow.querySelectorAll("input").forEach(input => {
+            if (input.type === "checkbox") {
+                input.checked = false;
+            } else {
+                input.value = "";
+            }
+        });
+
+        tableBody.appendChild(newRow);
+        totalForms.value = formIdx + 1;
+    });
+
+    tableBody.addEventListener("click", function (e) {
+        const removeButton = e.target.closest(".remove-row");
+        if (!removeButton) {
+            return;
+        }
+
+        const row = removeButton.closest("tr");
+        if (!row) {
+            return;
+        }
+
+        if (visibleRowCount() <= 1) {
+            return;
+        }
+
+        const deleteInput = row.querySelector('input[name$="-DELETE"]');
+        const idInput = row.querySelector('input[name$="-id"]');
+
+        if (idInput && idInput.value && deleteInput) {
+            deleteInput.checked = true;
+            row.style.display = "none";
+            return;
+        }
+
+        row.remove();
+    });
+});
+</script>
 {% endblock %}

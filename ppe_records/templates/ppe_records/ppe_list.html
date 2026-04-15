@@ -56,9 +56,18 @@
                             <i class="fas fa-edit"></i>
                         </a>
 
-                        <a href="{% url 'ppe_records:ppe-delete' record.pk %}" class="action-btn delete-btn">
+                        <button
+                            type="button"
+                            class="action-btn delete-btn js-delete-trigger"
+                            data-delete-url="{% url 'ppe_records:ppe-delete' record.pk %}"
+                            data-reference="{{ record.employee_name|default:'PPE record' }}"
+                            data-delete-type="PPE record"
+                            data-delete-button="Delete Record"
+                            title="Delete"
+                            aria-label="Delete record for {{ record.employee_name }}"
+                        >
                             <i class="fas fa-trash"></i>
-                        </a>
+                        </button>
                     </td>
                 </tr>
                 {% empty %}

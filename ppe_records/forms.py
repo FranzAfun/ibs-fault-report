@@ -22,14 +22,20 @@ class PPEItemForm(forms.ModelForm):
 		widgets = {
 			'ppe_type': forms.TextInput(attrs={'class': 'input-control'}),
 			'date_issued': forms.DateInput(attrs={'type': 'date', 'class': 'input-control'}),
-			'employee_signature': forms.TextInput(attrs={'class': 'input-control'}),
+			'employee_signature': forms.CheckboxInput(attrs={'class': 'checkbox-control'}),
 		}
+
+	def clean_employee_signature(self):
+		value = self.cleaned_data.get('employee_signature')
+		if value in (True, 'on', 'true', 'True', '1', 1):
+			return 'Signed'
+		return ''
 
 
 PPEItemFormSet = inlineformset_factory(
 	PPEIssueRecord,
 	PPEItem,
 	form=PPEItemForm,
-	extra=3,
+	extra=1,
 	can_delete=True,
 )
