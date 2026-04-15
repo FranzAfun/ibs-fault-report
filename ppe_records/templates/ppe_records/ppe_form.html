@@ -5,7 +5,9 @@
 <div class="page-container">
 <div class="content-container">
 
-    <h2 class="page-title">PPE Issue Record</h2>
+    <h2 class="page-title">
+        {% if is_edit %}Edit PPE Record{% else %}PPE Issue Record{% endif %}
+    </h2>
 
     <form method="post">
         {% csrf_token %}
@@ -78,7 +80,7 @@
 
         <div style="margin-top:20px; display:flex; justify-content:flex-end;">
             <button type="submit" class="btn btn-primary">
-                Submit Record
+                {% if is_edit %}Update Record{% else %}Submit Record{% endif %}
             </button>
         </div>
 

@@ -1,0 +1,65 @@
+{% extends "fault_logs/base.html" %}
+
+{% block content %}
+
+<div class="page-container">
+<div class="content-container">
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+        <a href="{% url 'ppe_records:ppe-list' %}" class="btn">
+            Back
+        </a>
+
+        <div>
+            <a href="{% url 'ppe_records:ppe-edit' record.pk %}" class="btn btn-primary">
+                Edit
+            </a>
+
+            <a href="{% url 'ppe_records:ppe-delete' record.pk %}" class="btn" style="background:#dc3545; color:white;">
+                Delete
+            </a>
+        </div>
+    </div>
+
+    <h2 class="page-title">PPE Record Detail</h2>
+
+    <!-- EMPLOYEE INFO -->
+    <div class="form-section">
+        <h3 class="section-title">Employee Information</h3>
+
+        <p><strong>Name:</strong> {{ record.employee_name }}</p>
+        <p><strong>Project:</strong> {{ record.project }}</p>
+        <p><strong>Job Title:</strong> {{ record.job_title }}</p>
+    </div>
+
+    <!-- PPE ITEMS -->
+    <div class="form-section">
+        <h3 class="section-title">PPE Items</h3>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Date Issued</th>
+                    <th>Employee Signature</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in record.items.all %}
+                <tr>
+                    <td>{{ item.ppe_type }}</td>
+                    <td>{{ item.date_issued }}</td>
+                    <td>{{ item.employee_signature }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No items recorded.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</div>
+{% endblock %}

@@ -13,7 +13,9 @@ app_name = 'fault_logs'
 
 urlpatterns = [
     path('', FaultReportListView.as_view(), name='faultreport-list'),
+    path('', FaultReportListView.as_view(), name='report-list'),
     path('new/', FaultReportCreateView.as_view(), name='faultreport-create'),
+    path('new/', FaultReportCreateView.as_view(), name='report-create'),
     path('<int:pk>/', FaultReportDetailView.as_view(), name='faultreport-detail'),
     path('<int:pk>/edit/', FaultReportUpdateView.as_view(), name='faultreport-update'),
     path('<int:pk>/delete/', FaultReportDeleteView.as_view(), name='faultreport-delete'),
