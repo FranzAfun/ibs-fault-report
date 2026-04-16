@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('faults/', include('fault_logs.urls')),
     path('ppe/', include('ppe_records.urls')),
+    path('assets/', include('assets.urls')),
 ]
 
 if settings.DEBUG:
