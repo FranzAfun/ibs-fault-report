@@ -6,6 +6,7 @@ Currently includes:
 * Fault Report Management
 * PPE Issue Management
 * Employee-Issued IT Assets Management
+* Operations Dashboard
 
 The system is structured for clean integration into a larger ERP environment.
 
@@ -47,26 +48,62 @@ Manages issuance and tracking of PPE items per employee:
 
 ### 3. Employee-Issued IT Assets Management
 
-Manages issuance and tracking of IT assets assigned to employees:
+Fully implemented asset issuance workflow using AssetRecord and AssetItem:
 
-* Track IT assets issued to employees
-* Record asset type, serial numbers, and issue dates
-* Maintain assignment per employee
-* Provide list view with consistent action buttons (view, edit, delete)
-* Provide detailed view with structured layout
-* Support controlled updates and deletion
-* Prepare for future enhancements like return tracking and audit logs
+* AssetRecord stores employee-level issuance details
+* AssetItem stores one or more issued assets per record
+* Supports multi-item issuance per employee
+* Complete list, detail, create, update, and delete flows
+* Signature system aligned with PPE behavior:
+
+  * Staff can sign issued assets
+  * Creator cannot sign
+  * Once any item is signed, the entire record is locked
+  * Locked records cannot be edited or deleted
+
+---
+
+## Routes
+
+* Dashboard -> /
+* Fault Logs -> /faults/
+* PPE Records -> /ppe/
+* Asset Records -> /assets/
+
+Common detail patterns:
+
+* Create -> /new/
+* Detail -> /<id>/
+* Edit -> /<id>/edit/
+
+---
+
+## Project Structure
+
+```text
+ibs-fault-report/
+├── config/
+├── fault_logs/
+├── ppe/
+├── assets/
+├── dashboard/
+├── templates/
+├── static/
+├── manage.py
+```
 
 ---
 
 ## Technical Stack
 
 * Framework: Django
-* Apps (current + planned):
+* Apps (current):
 
   * fault_logs
   * ppe_records
-  * it_assets (planned)
+  * assets (fully implemented)
+  * dashboard (entry point)
+  * core
 * Environment-based configuration
 * Production-ready setup with secure defaults
 
@@ -84,9 +121,10 @@ Manages issuance and tracking of IT assets assigned to employees:
 
 ## Current Status
 
-* Fault Report module: Functional CRUD with styled UI
-* PPE module: Fully functional with signature enforcement and role-based behavior
-* Employee-Issued IT Assets module: Included in scope and structured for implementation
+* Fault Report module: Complete
+* PPE module: Complete with signature enforcement
+* Assets module: Complete with signature and lock system
+* Dashboard: Implemented as system entry point
 * System ready for ERP integration
 
 ---
