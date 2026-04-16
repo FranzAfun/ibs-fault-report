@@ -13,6 +13,27 @@
         <a class="btn btn--secondary" href="{% url 'assets:asset-list' %}{% if mode %}?mode={{ mode }}{% endif %}">Back to Log</a>
     </header>
 
+    <div class="panel-section">
+        <div class="policy-block">
+            <p>
+                The IT assets listed below have been issued to the employee named above in accordance with company policies and IT asset management procedures.
+            </p>
+
+            <p class="mt-2">The employee has a responsibility to:</p>
+
+            <ul class="policy-list">
+                <li>Take reasonable care of the IT assets provided</li>
+                <li>Use the IT assets following the training and instructions given</li>
+                <li>Keep IT assets clean, secure, and return them when required</li>
+                <li>Report any loss, theft, or defect immediately</li>
+            </ul>
+
+            <p class="policy-note">
+                Note: Any assets issued must be returned on demand by an appropriate authority.
+            </p>
+        </div>
+    </div>
+
     {% if has_signed_items %}
     <div class="message message-warning">
         This asset record is locked because one or more items have been signed. Form submission is disabled.

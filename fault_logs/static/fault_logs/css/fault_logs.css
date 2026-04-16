@@ -1017,6 +1017,44 @@ a:not(.btn):not(.action-btn):not(.icon-btn):not(.back-link):hover {
   margin-bottom: 4px;
 }
 
+.policy-block {
+  border-left: 4px solid var(--color-primary-700);
+  padding: 16px 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.policy-block p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #374151;
+  margin: 0;
+}
+
+.policy-block .mt-2 {
+  margin-top: 8px;
+}
+
+.policy-list {
+  margin: 8px 0 0 16px;
+  padding: 0;
+}
+
+.policy-list li {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.policy-note {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+}
+
 .ppe-detail-page .page-header h2 {
   margin: 8px 0 0;
   font-size: 30px;
