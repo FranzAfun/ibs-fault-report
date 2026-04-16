@@ -1,5 +1,5 @@
-{% load static %}
 {% extends "fault_logs/base.html" %}
+{% load static %}
 
 {% block title %}Asset Records | IBS{% endblock %}
 
@@ -10,7 +10,7 @@
             <h1>Asset Records</h1>
             <p>Centralized operational table for employee-issued IT asset records.</p>
         </div>
-        <a class="btn btn--primary" href="{% url 'assets:asset-create' %}">New Asset Record</a>
+        <a class="btn btn--primary" href="{% url 'assets:asset-create' %}{% if mode %}?mode={{ mode }}{% endif %}">New Asset Record</a>
     </header>
 
     <div class="table-wrap">
@@ -37,7 +37,7 @@
                         <td>{{ record.approval_date|date:'D, F j, Y'|default:'-' }}</td>
                         <td class="actions-cell">
                             <a
-                                href="{% url 'assets:asset-detail' record.pk %}"
+                                href="{% url 'assets:asset-detail' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
                                 class="action-btn view-btn"
                                 aria-label="View asset record {{ record.reference_number }}"
                                 title="View"
@@ -45,8 +45,9 @@
                                 <i class="fas fa-eye" aria-hidden="true"></i>
                             </a>
 
+                            {% if mode != "staff" and record.signed_items == 0 %}
                             <a
-                                href="{% url 'assets:asset-update' record.pk %}"
+                                href="{% url 'assets:asset-update' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
                                 class="action-btn edit-btn"
                                 aria-label="Edit asset record {{ record.reference_number }}"
                                 title="Edit"
@@ -57,7 +58,7 @@
                             <a
                                 href="#"
                                 class="action-btn delete-btn js-delete-trigger"
-                                data-delete-url="{% url 'assets:asset-delete' record.pk %}"
+                                data-delete-url="{% url 'assets:asset-delete' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
                                 data-reference="{{ record.reference_number }}"
                                 data-delete-type="asset record"
                                 data-delete-button="Delete Record"
@@ -66,6 +67,7 @@
                             >
                                 <i class="fas fa-trash" aria-hidden="true"></i>
                             </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% empty %}

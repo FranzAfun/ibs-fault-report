@@ -5,6 +5,7 @@ from .views import (
 	AssetRecordDetailView,
 	AssetRecordUpdateView,
 	AssetRecordDeleteView,
+	AssetItemSignView,
 )
 
 app_name = 'assets'
@@ -15,4 +16,5 @@ urlpatterns = [
 	path('<int:pk>/', AssetRecordDetailView.as_view(), name='asset-detail'),
 	path('<int:pk>/edit/', AssetRecordUpdateView.as_view(), name='asset-update'),
 	path('<int:pk>/delete/', AssetRecordDeleteView.as_view(), name='asset-delete'),
+	path('items/<int:item_id>/sign/', AssetItemSignView.as_view(), name='asset-sign'),
 ]

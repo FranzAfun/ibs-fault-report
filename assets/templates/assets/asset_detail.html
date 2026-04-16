@@ -1,5 +1,5 @@
-{% load static %}
 {% extends "fault_logs/base.html" %}
+{% load static %}
 
 {% block title %}Asset Record {{ asset_record.reference_number }} | IBS{% endblock %}
 
@@ -10,11 +10,33 @@
             <h1>Asset Record {{ asset_record.reference_number }}</h1>
             <p>Detailed assignment record for employee-issued IT assets.</p>
         </div>
+        {% if not has_signed_items and mode != "staff" %}
         <div class="header-actions">
-            <a class="btn btn--secondary" href="{% url 'assets:asset-list' %}">Back to Log</a>
-            <a class="btn btn--primary" href="{% url 'assets:asset-update' asset_record.pk %}">Edit Record</a>
+            <a class="btn btn--secondary" href="{% url 'assets:asset-list' %}{% if mode %}?mode={{ mode }}{% endif %}">Back to Log</a>
+            <a class="btn btn--primary" href="{% url 'assets:asset-update' asset_record.pk %}{% if mode %}?mode={{ mode }}{% endif %}">Edit Record</a>
+            <a
+                href="#"
+                class="btn btn--danger js-delete-trigger"
+                data-delete-url="{% url 'assets:asset-delete' asset_record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
+                data-reference="{{ asset_record.reference_number }}"
+                data-delete-type="asset record"
+                data-delete-button="Delete Record"
+            >
+                Delete
+            </a>
         </div>
+        {% else %}
+        <div class="header-actions">
+            <a class="btn btn--secondary" href="{% url 'assets:asset-list' %}{% if mode %}?mode={{ mode }}{% endif %}">Back to Log</a>
+        </div>
+        {% endif %}
     </header>
+
+    {% if has_signed_items %}
+    <div class="message message-warning">
+        This asset record is locked because one or more items have been signed. Editing and deletion are disabled.
+    </div>
+    {% endif %}
 
     <div class="document-body">
         <div class="document-section">
@@ -66,7 +88,7 @@
                             <th>Asset Type</th>
                             <th>Date Issued</th>
                             <th>Issued By</th>
-                            <th>Employee Signature</th>
+                            <th>Signature</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,7 +97,22 @@
                                 <td>{{ item.asset_type }}</td>
                                 <td>{{ item.date_issued|date:'D, F j, Y' }}</td>
                                 <td>{{ item.issued_by }}</td>
-                                <td>{{ item.employee_signature|default:'-' }}</td>
+                                <td>
+                                    {% if item.employee_signature %}
+                                        <span class="status-badge success">Signed</span>
+                                    {% else %}
+                                        {% if mode == "staff" %}
+                                            <form method="post" action="{% url 'assets:asset-sign' item.id %}?mode={{ mode }}" class="sign-action-form">
+                                                {% csrf_token %}
+                                                <button type="submit" class="icon-btn icon-btn-success" title="Sign">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            <span class="status-badge warning">Pending</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% empty %}
                             <tr>

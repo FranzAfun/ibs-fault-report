@@ -25,7 +25,7 @@ class AssetRecordForm(forms.ModelForm):
 class AssetItemForm(forms.ModelForm):
 	class Meta:
 		model = AssetItem
-		fields = ['asset_type', 'date_issued', 'issued_by', 'employee_signature']
+		fields = ['asset_type', 'date_issued', 'issued_by']
 		widgets = {
 			'date_issued': forms.DateInput(attrs={'type': 'date'}),
 		}

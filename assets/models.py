@@ -38,7 +38,7 @@ class AssetItem(models.Model):
 	asset_type = models.CharField(max_length=150)
 	date_issued = models.DateField()
 	issued_by = models.CharField(max_length=150)
-	employee_signature = models.CharField(max_length=150, blank=True)
+	employee_signature = models.BooleanField(default=False)
 
 	def __str__(self) -> str:
 		return f'{self.asset_type} ({self.date_issued})'

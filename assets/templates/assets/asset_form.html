@@ -1,5 +1,5 @@
-{% load static %}
 {% extends "fault_logs/base.html" %}
+{% load static %}
 
 {% block title %}{% if object %}Update Asset Record{% else %}New Asset Record{% endif %} | IBS{% endblock %}
 
@@ -10,8 +10,14 @@
             <h1>{% if object %}Update Asset Record{% else %}Asset Record Submission{% endif %}</h1>
             <p>Structured capture for employee-issued IT asset assignments.</p>
         </div>
-        <a class="btn btn--secondary" href="{% url 'assets:asset-list' %}">Back to Log</a>
+        <a class="btn btn--secondary" href="{% url 'assets:asset-list' %}{% if mode %}?mode={{ mode }}{% endif %}">Back to Log</a>
     </header>
+
+    {% if has_signed_items %}
+    <div class="message message-warning">
+        This asset record is locked because one or more items have been signed. Form submission is disabled.
+    </div>
+    {% endif %}
 
     <form method="post" novalidate class="report-form">
         {% csrf_token %}
@@ -64,7 +70,6 @@
                             <th>Asset Type</th>
                             <th>Date Issued</th>
                             <th>Issued By</th>
-                            <th>Employee Signature</th>
                             <th aria-label="Actions"></th>
                         </tr>
                     </thead>
@@ -82,10 +87,6 @@
                                 <td>
                                     {{ item_form.issued_by }}
                                     {% for error in item_form.issued_by.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
-                                </td>
-                                <td>
-                                    {{ item_form.employee_signature }}
-                                    {% for error in item_form.employee_signature.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
                                 </td>
                                 <td>
                                     <span style="display:none;">{{ item_form.id }}{{ item_form.DELETE }}</span>
@@ -108,7 +109,6 @@
                     <td>{{ formset.empty_form.asset_type }}</td>
                     <td>{{ formset.empty_form.date_issued }}</td>
                     <td>{{ formset.empty_form.issued_by }}</td>
-                    <td>{{ formset.empty_form.employee_signature }}</td>
                     <td>
                         <span style="display:none;">{{ formset.empty_form.id }}{{ formset.empty_form.DELETE }}</span>
                         <button type="button" class="icon-btn icon-btn-danger remove-row" title="Delete">
@@ -136,8 +136,8 @@
         </section>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn--primary">{% if object %}Update Record{% else %}Submit Record{% endif %}</button>
-            <a class="btn btn--secondary" href="{% url 'assets:asset-list' %}">Cancel</a>
+            <button type="submit" class="btn btn--primary" {% if has_signed_items %}disabled{% endif %}>{% if object %}Update Record{% else %}Submit Record{% endif %}</button>
+            <a class="btn btn--secondary" href="{% url 'assets:asset-list' %}{% if mode %}?mode={{ mode }}{% endif %}">Cancel</a>
         </div>
     </form>
 </section>
