@@ -7,7 +7,7 @@
 <section class="panel">
     <header class="panel-header">
         <div>
-            <h1>Asset Records</h1>
+            <h1>IT Asset Records</h1>
             <p>Centralized operational table for employee-issued IT asset records.</p>
         </div>
         <a class="btn btn--primary" href="{% url 'assets:asset-create' %}{% if mode %}?mode={{ mode }}{% endif %}">New Asset Record</a>
@@ -21,6 +21,7 @@
                     <th>Employee</th>
                     <th>Project</th>
                     <th>Job Title</th>
+                    <th>Asset Types</th>
                     <th>Approved By</th>
                     <th>Approval Date</th>
                     <th>Actions</th>
@@ -33,6 +34,13 @@
                         <td class="truncate-cell" title="{{ record.employee_name }}">{{ record.employee_name }}</td>
                         <td>{{ record.project }}</td>
                         <td>{{ record.job_title }}</td>
+                        <td>
+                            {% for item in record.items.all %}
+                                {{ item.asset_type }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                &mdash;
+                            {% endfor %}
+                        </td>
                         <td>{{ record.approved_by|default:'-' }}</td>
                         <td>{{ record.approval_date|date:'D, F j, Y'|default:'-' }}</td>
                         <td class="actions-cell">
@@ -72,7 +80,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="7" class="empty-row">No asset records have been logged yet.</td>
+                        <td colspan="8" class="empty-row">No asset records have been logged yet.</td>
                     </tr>
                 {% endfor %}
             </tbody>
