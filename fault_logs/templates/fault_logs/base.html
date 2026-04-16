@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}IBS Fault Report Management{% endblock %}</title>
+    <title>{% block title %}IBS Operations System{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,10 +15,7 @@
 <body>
     <header class="site-header">
         <div class="site-header-inner">
-            <a class="brand" href="{% url 'fault_logs:faultreport-list' %}">
-                <span class="brand-kicker">IBS Operations</span>
-                <span class="brand-title">Fault Report Management</span>
-            </a>
+            <a href="{% url 'dashboard' %}" class="brand brand-link">IBS Operations System</a>
             <nav class="main-nav" aria-label="Primary">
                 <a href="{% url 'fault_logs:faultreport-list' %}">Report Log</a>
                 <a href="{% url 'ppe_records:ppe-list' %}">PPE Log</a>

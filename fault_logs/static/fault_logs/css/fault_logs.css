@@ -1201,6 +1201,16 @@ a:not(.btn):not(.action-btn):not(.icon-btn):not(.back-link):hover {
   color: #ffffff;
 }
 
+.btn-success {
+  background: #198754;
+  color: #ffffff;
+}
+
+.btn-success:hover {
+  background: #157347;
+  color: #ffffff;
+}
+
 .btn-secondary {
   background: #6c757d;
   color: #ffffff;

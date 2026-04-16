@@ -1,128 +1,117 @@
 {% extends "fault_logs/base.html" %}
 
 {% block content %}
-
-<div class="page-container">
-<div class="content-container">
-
-    {% if not is_edit %}
-    <div style="margin-bottom: 12px;">
-        <a href="{% url 'ppe_records:ppe-list' %}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i>
-            Back to Records
-        </a>
+<section class="panel document-panel">
+    <div class="panel-header">
+        <h2>{% if is_edit %}Edit PPE Record{% else %}PPE Issue Record{% endif %}</h2>
+        <a href="{% url 'ppe_records:ppe-list' %}" class="btn btn--secondary">Back to Records</a>
     </div>
-    {% endif %}
 
-    <h2 class="page-title">
-        {% if is_edit %}Edit PPE Record{% else %}PPE Issue Record{% endif %}
-    </h2>
+    <div class="panel-body">
+        <form method="post">
+            {% csrf_token %}
 
-    <form method="post">
-        {% csrf_token %}
+            <div class="panel-section form-section">
+                <h3 class="section-title">Employee Information</h3>
 
-        <div class="form-section">
-            <h3 class="section-title">Employee Information</h3>
+                <div class="form-grid">
+                    <div>
+                        <label class="form-label">Employee Name</label>
+                        {{ form.employee_name }}
+                    </div>
 
-            <div class="form-grid">
-                <div>
-                    <label class="form-label">Employee Name</label>
-                    {{ form.employee_name }}
-                </div>
+                    <div>
+                        <label class="form-label">Project</label>
+                        {{ form.project }}
+                    </div>
 
-                <div>
-                    <label class="form-label">Project</label>
-                    {{ form.project }}
-                </div>
-
-                <div>
-                    <label class="form-label">Job Title</label>
-                    {{ form.job_title }}
+                    <div>
+                        <label class="form-label">Job Title</label>
+                        {{ form.job_title }}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="ppe-note">
-            <p class="note-title">
-                Note
-            </p>
+            <div class="panel-section">
+                <div class="ppe-note">
+                    <p class="note-title">Note</p>
 
-            <p class="note-text">
-                This form should be retained in the staff member's personal file.
-            </p>
+                    <p class="note-text">
+                        This form should be retained in the staff member's personal file.
+                    </p>
 
-            <p class="note-text">
-                The PPE listed below has been issued in accordance with applicable health and safety regulations.
-            </p>
+                    <p class="note-text">
+                        The PPE listed below has been issued in accordance with applicable health and safety regulations.
+                    </p>
 
-            <div class="note-section">
-                <p class="note-subtitle">Employee responsibilities:</p>
+                    <div class="note-section">
+                        <p class="note-subtitle">Employee responsibilities:</p>
 
-                <ul class="note-list">
-                    <li>Take reasonable care of issued PPE</li>
-                    <li>Use PPE according to training and instructions</li>
-                    <li>Keep PPE clean and return after use</li>
-                    <li>Report any loss or defect immediately</li>
-                </ul>
+                        <ul class="note-list">
+                            <li>Take reasonable care of issued PPE</li>
+                            <li>Use PPE according to training and instructions</li>
+                            <li>Keep PPE clean and return after use</li>
+                            <li>Report any loss or defect immediately</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="form-section">
-            <h3 class="section-title">PPE Items</h3>
+            <div class="panel-section form-section">
+                <h3 class="section-title">PPE Items</h3>
 
-            {{ formset.management_form }}
+                {{ formset.management_form }}
 
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Type of PPE Issued</th>
-                        <th>Date Issued</th>
-                        <th aria-label="Actions"></th>
-                    </tr>
-                </thead>
-                <tbody id="ppe-items-body">
-                    {% for form in formset %}
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Type of PPE Issued</th>
+                            <th>Date Issued</th>
+                            <th aria-label="Actions"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="ppe-items-body">
+                        {% for form in formset %}
+                        <tr class="ppe-item-row">
+                            <td>{{ form.ppe_type }}</td>
+                            <td>{{ form.date_issued }}</td>
+                            <td>
+                                <span style="display:none;">{{ form.id }}{{ form.DELETE }}</span>
+                                <button type="button" class="icon-btn icon-btn-danger remove-row" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <button type="button" id="add-item" class="btn btn-secondary">
+                    + Add PPE Item
+                </button>
+
+                <script type="text/template" id="empty-form-template">
                     <tr class="ppe-item-row">
-                        <td>{{ form.ppe_type }}</td>
-                        <td>{{ form.date_issued }}</td>
+                        <td>__PPE_TYPE__</td>
+                        <td>__DATE__</td>
                         <td>
-                            <span style="display:none;">{{ form.id }}{{ form.DELETE }}</span>
                             <button type="button" class="icon-btn icon-btn-danger remove-row" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
                     </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                </script>
+            </div>
 
-            <button type="button" id="add-item" class="btn btn-secondary" style="margin-top: 12px;">
-                + Add PPE Item
-            </button>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    {% if is_edit %}Update Record{% else %}Submit Record{% endif %}
+                </button>
+            </div>
 
-            <script type="text/template" id="empty-form-template">
-                <tr class="ppe-item-row">
-                    <td>__PPE_TYPE__</td>
-                    <td>__DATE__</td>
-                    <td>
-                        <button type="button" class="icon-btn icon-btn-danger remove-row" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            </script>
-        </div>
-
-        <div style="margin-top:20px; display:flex; justify-content:flex-end;">
-            <button type="submit" class="btn btn-primary">
-                {% if is_edit %}Update Record{% else %}Submit Record{% endif %}
-            </button>
-        </div>
-
-    </form>
-
-</div>
-</div>
+        </form>
+    </div>
+</section>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {

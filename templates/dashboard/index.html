@@ -1,0 +1,21 @@
+{% extends "fault_logs/base.html" %}
+
+{% block title %}Operations Dashboard | IBS{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <h2>Operations Dashboard</h2>
+  </div>
+
+  <div class="panel-body">
+    <p>Select a module:</p>
+
+    <div class="panel-footer">
+      <a href="{% url 'fault_logs:faultreport-list' %}" class="btn btn--secondary">Fault Logs</a>
+      <a href="{% url 'ppe_records:ppe-list' %}" class="btn btn--secondary">PPE Records</a>
+      <a href="{% url 'assets:asset-list' %}" class="btn btn--secondary">Asset Records</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -18,13 +18,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from dashboard.views import DashboardView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),
+    path('', DashboardView.as_view(), name='dashboard'),
     path('faults/', include('fault_logs.urls')),
     path('ppe/', include('ppe_records.urls')),
     path('assets/', include('assets.urls')),
+    path('home/', include('core.urls')),
 ]
 
 if settings.DEBUG:
