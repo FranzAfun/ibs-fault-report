@@ -5,6 +5,7 @@ Currently includes:
 
 * Fault Report Management
 * PPE Issue Management
+* Employee-Issued IT Assets Management
 
 The system is structured for clean integration into a larger ERP environment.
 
@@ -44,13 +45,28 @@ Manages issuance and tracking of PPE items per employee:
 
 ---
 
+### 3. Employee-Issued IT Assets Management
+
+Manages issuance and tracking of IT assets assigned to employees:
+
+* Track IT assets issued to employees
+* Record asset type, serial numbers, and issue dates
+* Maintain assignment per employee
+* Provide list view with consistent action buttons (view, edit, delete)
+* Provide detailed view with structured layout
+* Support controlled updates and deletion
+* Prepare for future enhancements like return tracking and audit logs
+
+---
+
 ## Technical Stack
 
 * Framework: Django
-* Apps:
+* Apps (current + planned):
 
   * fault_logs
   * ppe_records
+  * it_assets (planned)
 * Environment-based configuration
 * Production-ready setup with secure defaults
 
@@ -70,6 +86,7 @@ Manages issuance and tracking of PPE items per employee:
 
 * Fault Report module: Functional CRUD with styled UI
 * PPE module: Fully functional with signature enforcement and role-based behavior
+* Employee-Issued IT Assets module: Included in scope and structured for implementation
 * System ready for ERP integration
 
 ---
