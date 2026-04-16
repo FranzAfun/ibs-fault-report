@@ -1,30 +1,79 @@
-# IBS Fault Report System
+# IBS Operations Management System
 
-A Django-based CRUD platform for managing IBS fault reports from intake to resolution. The project is initialized with production-aware configuration, environment-driven settings, and secure deployment defaults.
+A Django-based CRUD platform for managing operational workflows within IBS.
+Currently includes:
 
-## Planned CRUD Scope
+* Fault Report Management
+* PPE Issue Management
 
-The upcoming implementation will provide complete Create, Read, Update, and Delete workflows for fault records, including:
-- fault ticket creation with structured metadata
-- searchable and filterable fault listing
-- detailed fault report view
-- status and assignment updates
-- edit and closure lifecycle tracking
-- controlled deletion and audit-friendly patterns
+The system is structured for clean integration into a larger ERP environment.
 
-## Technical Base
+---
 
-- Framework: Django
-- App: fault_logs
-- Settings: environment-variable based with production toggles
-- Security posture: deploy checks enabled and hardened defaults in place
+## Modules
 
-## UI Direction (Upcoming)
+### 1. Fault Report Management
 
-The next UI phase will use a professional, industrial-grade design palette with clearly defined primary, secondary, accent, and neutral colors.
+Handles full lifecycle of fault reporting:
 
-Important: previous green color combinations are intentionally excluded and will not be used in the new interface.
+* Create fault reports
+* View centralized fault log
+* Update status and resolution
+* Assign responsibility
+* Controlled deletion
+
+---
+
+### 2. PPE Issue Management
+
+Manages issuance and tracking of PPE items per employee:
+
+* Create PPE issue records
+* Dynamic PPE item entries (add/remove rows)
+* Clean tabular listing with action controls
+* Detail view with structured layout
+* Signature workflow:
+
+  * Staff can sign issued PPE
+  * Creator cannot sign
+  * Once signed:
+
+    * No edits allowed
+    * No deletion allowed
+    * Record becomes read-only
+
+---
+
+## Technical Stack
+
+* Framework: Django
+* Apps:
+
+  * fault_logs
+  * ppe_records
+* Environment-based configuration
+* Production-ready setup with secure defaults
+
+---
+
+## UI/UX Direction
+
+* Clean, structured, professional layout
+* Consistent action buttons (icon-based)
+* Card-based sections for readability
+* Controlled interactions (no accidental actions)
+* Consistent behavior across modules
+
+---
 
 ## Current Status
 
-Initial project scaffolding and production-ready configuration are complete. CRUD views and UI implementation have not started yet.
+* Fault Report module: Functional CRUD with styled UI
+* PPE module: Fully functional with signature enforcement and role-based behavior
+* System ready for ERP integration
+
+---
+
+## Author
+
+FranzAfun
