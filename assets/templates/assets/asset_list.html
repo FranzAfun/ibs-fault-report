@@ -1,0 +1,92 @@
+{% load static %}
+{% extends "fault_logs/base.html" %}
+
+{% block title %}Asset Records | IBS{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <header class="panel-header">
+        <div>
+            <h1>Asset Records</h1>
+            <p>Centralized operational table for employee-issued IT asset records.</p>
+        </div>
+        <a class="btn btn--primary" href="{% url 'assets:asset-create' %}">New Asset Record</a>
+    </header>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Ref No.</th>
+                    <th>Employee</th>
+                    <th>Project</th>
+                    <th>Job Title</th>
+                    <th>Approved By</th>
+                    <th>Approval Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in asset_records %}
+                    <tr>
+                        <td class="mono-text ref-cell">{{ record.reference_number }}</td>
+                        <td class="truncate-cell" title="{{ record.employee_name }}">{{ record.employee_name }}</td>
+                        <td>{{ record.project }}</td>
+                        <td>{{ record.job_title }}</td>
+                        <td>{{ record.approved_by|default:'-' }}</td>
+                        <td>{{ record.approval_date|date:'D, F j, Y'|default:'-' }}</td>
+                        <td class="actions-cell">
+                            <a
+                                href="{% url 'assets:asset-detail' record.pk %}"
+                                class="action-btn view-btn"
+                                aria-label="View asset record {{ record.reference_number }}"
+                                title="View"
+                            >
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </a>
+
+                            <a
+                                href="{% url 'assets:asset-update' record.pk %}"
+                                class="action-btn edit-btn"
+                                aria-label="Edit asset record {{ record.reference_number }}"
+                                title="Edit"
+                            >
+                                <i class="fas fa-edit" aria-hidden="true"></i>
+                            </a>
+
+                            <a
+                                href="#"
+                                class="action-btn delete-btn js-delete-trigger"
+                                data-delete-url="{% url 'assets:asset-delete' record.pk %}"
+                                data-reference="{{ record.reference_number }}"
+                                data-delete-type="asset record"
+                                data-delete-button="Delete Record"
+                                aria-label="Delete asset record {{ record.reference_number }}"
+                                title="Delete"
+                            >
+                                <i class="fas fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7" class="empty-row">No asset records have been logged yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+        <nav class="pagination" aria-label="Asset record pagination">
+            {% if page_obj.has_previous %}
+                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}

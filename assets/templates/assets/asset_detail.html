@@ -1,0 +1,91 @@
+{% load static %}
+{% extends "fault_logs/base.html" %}
+
+{% block title %}Asset Record {{ asset_record.reference_number }} | IBS{% endblock %}
+
+{% block content %}
+<section class="panel document-panel">
+    <header class="panel-header">
+        <div>
+            <h1>Asset Record {{ asset_record.reference_number }}</h1>
+            <p>Detailed assignment record for employee-issued IT assets.</p>
+        </div>
+        <div class="header-actions">
+            <a class="btn btn--secondary" href="{% url 'assets:asset-list' %}">Back to Log</a>
+            <a class="btn btn--primary" href="{% url 'assets:asset-update' asset_record.pk %}">Edit Record</a>
+        </div>
+    </header>
+
+    <div class="document-body">
+        <div class="document-section">
+            <h2>Employee Information</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Reference Number</div>
+                    <div class="detail-value mono-text">{{ asset_record.reference_number }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Employee Name</div>
+                    <div class="detail-value">{{ asset_record.employee_name }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Project</div>
+                    <div class="detail-value">{{ asset_record.project }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Job Title</div>
+                    <div class="detail-value">{{ asset_record.job_title }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Approval Section</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Approved By</div>
+                    <div class="detail-value">{{ asset_record.approved_by|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Approval Date</div>
+                    <div class="detail-value">{{ asset_record.approval_date|date:'D, F j, Y'|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Created At</div>
+                    <div class="detail-value">{{ asset_record.created_at|date:'D, M j, Y H:i' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Asset Items</h2>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Asset Type</th>
+                            <th>Date Issued</th>
+                            <th>Issued By</th>
+                            <th>Employee Signature</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in asset_record.items.all %}
+                            <tr>
+                                <td>{{ item.asset_type }}</td>
+                                <td>{{ item.date_issued|date:'D, F j, Y' }}</td>
+                                <td>{{ item.issued_by }}</td>
+                                <td>{{ item.employee_signature|default:'-' }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="empty-row">No asset items have been added to this record.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
