@@ -157,7 +157,7 @@ a {
     transition: color 0.15s ease;
 }
 
-a:hover {
+a:not(.btn):not(.action-btn):not(.icon-btn):not(.back-link):hover {
     color: var(--color-primary-900);
 }
 
@@ -783,18 +783,42 @@ a:hover {
     padding-top: 16px;
 }
 
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #2e7d32;
+    text-decoration: none;
+    margin-bottom: 6px;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
 .header-actions {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
+    gap: 8px;
 }
+
+  .detail-section {
+    margin-bottom: 20px;
+  }
 
 /* Detail view grid */
 .detail-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    font-size: 14px;
 }
 
 .detail-item {
@@ -987,33 +1011,11 @@ a:hover {
   margin-bottom: 4px;
 }
 
-.ppe-detail-page .page-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 18px;
-}
-
 .ppe-detail-page .page-header h2 {
   margin: 8px 0 0;
   font-size: 30px;
   line-height: 1.2;
   color: #111827;
-}
-
-.ppe-detail-page .back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #0f766e;
-  text-decoration: none;
-}
-
-.ppe-detail-page .back-link:hover {
-  color: #115e59;
 }
 
 .ppe-detail-page .header-actions {
@@ -1031,11 +1033,6 @@ a:hover {
   margin-top: 20px;
   padding-top: 18px;
   border-top: 1px solid #e5e7eb;
-}
-
-.ppe-detail-page .detail-grid {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
 }
 
 .ppe-detail-page .detail-grid > div {
@@ -1144,6 +1141,7 @@ a:hover {
 
 .btn-primary:hover {
   background: #0b5ed7;
+  color: #ffffff;
 }
 
 .btn-secondary {
@@ -1153,6 +1151,7 @@ a:hover {
 
 .btn-secondary:hover {
   background: #5c636a;
+  color: #ffffff;
 }
 
 .btn-danger {
@@ -1162,11 +1161,38 @@ a:hover {
 
 .btn-danger:hover {
   background: #bb2d3b;
+  color: #ffffff;
 }
 
 .btn-sm {
   padding: 6px 10px;
   font-size: 12px;
+}
+
+/* ===== GLOBAL BUTTON HOVER CONSISTENCY ===== */
+
+button,
+a.btn,
+.action-btn,
+.icon-btn {
+  transition: background-color 0.2s ease, color 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+button:hover:not(:disabled),
+a.btn:hover,
+.action-btn:hover,
+.icon-btn:hover {
+  filter: brightness(0.95);
+}
+
+a.btn:hover,
+a.action-btn:hover,
+a.icon-btn:hover {
+  text-decoration: none;
+}
+
+.btn--danger:hover {
+  opacity: 1;
 }
 
 /* ===== ACTION BUTTONS (GLOBAL STANDARD) ===== */
@@ -1206,9 +1232,10 @@ a:hover {
 
 /* HOVER EFFECT (CLEAN + MODERN) */
 .action-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  opacity: 0.95;
+  transform: none;
+  box-shadow: none;
+  opacity: 1;
+  color: #ffffff;
 }
 
 /* ACTIVE CLICK FEEDBACK */
