@@ -77,7 +77,6 @@
                     <tr>
                         <th>Type of PPE Issued</th>
                         <th>Date Issued</th>
-                        <th>Employee Signature</th>
                         <th aria-label="Actions"></th>
                     </tr>
                 </thead>
@@ -86,7 +85,6 @@
                     <tr class="ppe-item-row">
                         <td>{{ form.ppe_type }}</td>
                         <td>{{ form.date_issued }}</td>
-                        <td>{{ form.employee_signature }}</td>
                         <td>
                             <span style="display:none;">{{ form.id }}{{ form.DELETE }}</span>
                             <button type="button" class="icon-btn icon-btn-danger remove-row" title="Delete">
@@ -106,7 +104,6 @@
                 <tr class="ppe-item-row">
                     <td>__PPE_TYPE__</td>
                     <td>__DATE__</td>
-                    <td>__SIGNATURE__</td>
                     <td>
                         <button type="button" class="icon-btn icon-btn-danger remove-row" title="Delete">
                             <i class="fas fa-trash"></i>

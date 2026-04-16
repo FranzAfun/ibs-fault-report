@@ -576,24 +576,30 @@ a:not(.btn):not(.action-btn):not(.icon-btn):not(.back-link):hover {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     border: 1px solid;
+  border-left: 4px solid transparent;
+  box-shadow: var(--shadow-xs);
 }
 
 .message-success {
     background: var(--color-success-light);
     color: var(--color-success);
     border-color: var(--color-success-border);
+  border-left-color: var(--color-success);
 }
 
 .message-error, .message-danger {
     background: var(--color-danger-light);
     color: var(--color-danger);
     border-color: var(--color-danger-border);
+  border-left-color: var(--color-danger);
 }
 
-.message-info {
-    background: var(--color-info-light);
-    color: var(--color-info);
-    border-color: var(--color-info-border);
+.message-info,
+.message-warning {
+  background: #fff8e6;
+  color: #8a5a00;
+  border-color: #f4d39a;
+  border-left-color: #d97706;
 }
 
 .report-form {
@@ -1100,6 +1106,19 @@ a:not(.btn):not(.action-btn):not(.icon-btn):not(.back-link):hover {
 
 .icon-btn-danger:hover {
   background: #b02a37;
+}
+
+.icon-btn-success {
+  background: #2e7d32;
+}
+
+.icon-btn-success:hover {
+  background: #1b5e20;
+}
+
+.sign-action-form {
+  margin: 0;
+  display: inline-flex;
 }
 
 /* TABLE STYLING */

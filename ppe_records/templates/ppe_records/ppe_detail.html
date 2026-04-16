@@ -15,21 +15,21 @@
             <h2>PPE Record Detail</h2>
         </div>
 
+        {% if not has_signed_items %}
+        {% if mode != "staff" %}
         <div class="header-actions">
-            <a href="{% url 'ppe_records:ppe-edit' record.id %}" class="btn btn-primary">Edit</a>
-            <button
-                type="button"
-                class="btn btn-danger js-delete-trigger"
-                data-delete-url="{% url 'ppe_records:ppe-delete' record.id %}"
-                data-reference="{{ record.employee_name|default:'PPE record' }}"
-                data-delete-type="PPE record"
-                data-delete-button="Delete Record"
-                title="Delete"
-            >
-                Delete
-            </button>
+            <a href="{% url 'ppe_records:ppe-update' record.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'ppe_records:ppe-delete' record.id %}" class="btn btn-danger">Delete</a>
         </div>
+        {% endif %}
+        {% endif %}
     </div>
+
+    {% if has_signed_items %}
+    <div class="message message-warning">
+        This PPE record is locked because one or more PPE items have been signed. Editing and deletion are disabled.
+    </div>
+    {% endif %}
 
     <div class="card-container">
         <!-- Employee Info -->
@@ -64,7 +64,16 @@
                             {% if item.employee_signature %}
                                 <span class="status-badge success">Signed</span>
                             {% else %}
-                                <span class="status-badge warning">Not Signed</span>
+                                {% if mode == "staff" %}
+                                    <form method="post" action="{% url 'ppe_records:ppe-sign' item.id %}?mode={{ mode }}" class="sign-action-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="icon-btn icon-btn-success" title="Sign">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="status-badge warning">Pending</span>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>
