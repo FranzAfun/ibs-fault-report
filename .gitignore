@@ -23,3 +23,5 @@ staticfiles/
 .mypy_cache/
 .coverage
 htmlcov/
+
+project_scope.txt
