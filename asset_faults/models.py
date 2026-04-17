@@ -18,8 +18,6 @@ class AssetFaultReport(models.Model):
 	severity = models.CharField(max_length=10, choices=Severity.choices, default=Severity.LOW, db_index=True)
 	actions_taken = models.TextField(blank=True)
 	additional_comments = models.TextField(blank=True)
-	employee_signed = models.BooleanField(default=False)
-	employee_signed_date = models.DateField(null=True, blank=True)
 	assigned_to = models.CharField(max_length=150, blank=True)
 	it_signature = models.BooleanField(default=False)
 	date_received = models.DateField(null=True, blank=True)
