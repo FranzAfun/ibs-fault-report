@@ -10,7 +10,7 @@
             <h1>IT Asset Fault or Damage Reports</h1>
             <p>Centralized operational table for employee-reported IT asset issues.</p>
         </div>
-        <a class="btn btn--primary" href="{% url 'asset_faults:create' %}">New Fault Report</a>
+        <a class="btn btn--primary" href="{% url 'asset_faults:create' %}{% if mode %}?mode={{ mode }}{% endif %}">New Fault Report</a>
     </header>
 
     <div class="table-wrap">
@@ -23,6 +23,7 @@
                     <th>Job Title</th>
                     <th>Asset Type</th>
                     <th>Severity</th>
+                    <th>IT Signature</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -34,10 +35,25 @@
                         <td class="truncate-cell" title="{{ record.employee_name }}">{{ record.employee_name }}</td>
                         <td>{{ record.job_title }}</td>
                         <td>{{ record.asset_type }}</td>
-                        <td>{{ record.get_severity_display }}</td>
+                        <td>
+                            {% if record.severity == 'high' %}
+                                <span class="status-badge danger">High</span>
+                            {% elif record.severity == 'medium' %}
+                                <span class="status-badge warning">Medium</span>
+                            {% else %}
+                                <span class="status-badge success">Low</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if record.it_signature %}
+                                <span class="status-badge success">Signed</span>
+                            {% else %}
+                                <span class="status-badge warning">Pending</span>
+                            {% endif %}
+                        </td>
                         <td class="actions-cell">
                             <a
-                                href="{% url 'asset_faults:detail' record.pk %}"
+                                href="{% url 'asset_faults:detail' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
                                 class="action-btn view-btn"
                                 aria-label="View fault report {{ record.reference_number }}"
                                 title="View"
@@ -45,8 +61,9 @@
                                 <i class="fas fa-eye" aria-hidden="true"></i>
                             </a>
 
+                            {% if not record.it_signature %}
                             <a
-                                href="{% url 'asset_faults:update' record.pk %}"
+                                href="{% url 'asset_faults:update' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
                                 class="action-btn edit-btn"
                                 aria-label="Edit fault report {{ record.reference_number }}"
                                 title="Edit"
@@ -57,7 +74,7 @@
                             <a
                                 href="#"
                                 class="action-btn delete-btn js-delete-trigger"
-                                data-delete-url="{% url 'asset_faults:delete' record.pk %}"
+                                data-delete-url="{% url 'asset_faults:delete' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
                                 data-reference="{{ record.reference_number }}"
                                 data-delete-type="fault report"
                                 data-delete-button="Delete Report"
@@ -66,11 +83,12 @@
                             >
                                 <i class="fas fa-trash" aria-hidden="true"></i>
                             </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="7" class="empty-row">No fault reports have been logged yet.</td>
+                        <td colspan="8" class="empty-row">No fault reports have been logged yet.</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -80,11 +98,11 @@
     {% if is_paginated %}
         <nav class="pagination" aria-label="Asset fault report pagination">
             {% if page_obj.has_previous %}
-                <a class="btn btn-secondary btn-sm" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                <a class="btn btn-secondary btn-sm" href="?{% if mode %}mode={{ mode }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
             {% endif %}
             <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-                <a class="btn btn-secondary btn-sm" href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a class="btn btn-secondary btn-sm" href="?{% if mode %}mode={{ mode }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Next</a>
             {% endif %}
         </nav>
     {% endif %}

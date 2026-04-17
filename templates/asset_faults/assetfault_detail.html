@@ -11,20 +11,28 @@
             <p>Detailed document view for IT asset fault or damage reporting.</p>
         </div>
         <div class="header-actions">
-            <a class="btn btn-secondary" href="{% url 'asset_faults:list' %}">Back to Log</a>
-            <a class="btn btn-primary" href="{% url 'asset_faults:update' object.pk %}">Edit Report</a>
+            <a class="btn btn-secondary" href="{% url 'asset_faults:list' %}{% if mode %}?mode={{ mode }}{% endif %}">Back to Log</a>
+            {% if not object.it_signature %}
+            <a class="btn btn-primary" href="{% url 'asset_faults:update' object.pk %}{% if mode %}?mode={{ mode }}{% endif %}">Edit Report</a>
             <a
                 href="#"
                 class="btn btn-danger js-delete-trigger"
-                data-delete-url="{% url 'asset_faults:delete' object.pk %}"
+                data-delete-url="{% url 'asset_faults:delete' object.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
                 data-reference="{{ object.reference_number }}"
                 data-delete-type="fault report"
                 data-delete-button="Delete Report"
             >
                 Delete
             </a>
+            {% endif %}
         </div>
     </header>
+
+    {% if object.it_signature %}
+    <div class="message message-warning">
+        This fault report is locked because it has been signed by IT. Editing and deletion are disabled.
+    </div>
+    {% endif %}
 
     <div class="document-body">
         <div class="panel-section document-section">
@@ -68,7 +76,15 @@
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Severity</div>
-                    <div class="detail-value">{{ object.get_severity_display }}</div>
+                    <div class="detail-value">
+                        {% if object.severity == 'high' %}
+                            <span class="status-badge danger">High</span>
+                        {% elif object.severity == 'medium' %}
+                            <span class="status-badge warning">Medium</span>
+                        {% else %}
+                            <span class="status-badge success">Low</span>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="detail-item detail-item--full">
                     <div class="detail-label">Actions Taken</div>
@@ -100,33 +116,9 @@
                     <div class="detail-label">IT Signature</div>
                     <div class="detail-value">
                         {% if object.it_signature %}
-                            <span class="badge badge-success status-badge success">Signed</span>
+                            <span class="status-badge success">Signed</span>
                         {% else %}
-                            <span class="badge badge-warning status-badge warning">Pending</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel-section document-section">
-            <h2>Approval</h2>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <div class="detail-label">Approved By</div>
-                    <div class="detail-value">{{ object.approved_by|default:'-' }}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Approval Date</div>
-                    <div class="detail-value">{{ object.approval_date|date:'D, F j, Y'|default:'-' }}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Approved Signature</div>
-                    <div class="detail-value">
-                        {% if object.approved_signature %}
-                            <span class="badge badge-success status-badge success">Signed</span>
-                        {% else %}
-                            <span class="badge badge-warning status-badge warning">Pending</span>
+                            <span class="status-badge warning">Pending</span>
                         {% endif %}
                     </div>
                 </div>

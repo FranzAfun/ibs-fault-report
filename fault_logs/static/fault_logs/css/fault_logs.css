@@ -1368,6 +1368,11 @@ a.icon-btn:hover {
   color: #b26a00;
 }
 
+.status-badge.danger {
+  background: #fdf0f0;
+  color: #b93131;
+}
+
 .status-badge {
   padding: 4px 10px;
   border-radius: 999px;

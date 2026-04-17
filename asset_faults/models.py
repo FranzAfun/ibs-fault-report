@@ -22,9 +22,6 @@ class AssetFaultReport(models.Model):
 	it_signature = models.BooleanField(default=False)
 	date_received = models.DateField(null=True, blank=True)
 	resolution_date = models.DateField(null=True, blank=True)
-	approved_by = models.CharField(max_length=150, blank=True)
-	approved_signature = models.BooleanField(default=False)
-	approval_date = models.DateField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta:
