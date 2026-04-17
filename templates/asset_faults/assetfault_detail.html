@@ -1,0 +1,137 @@
+{% extends "fault_logs/base.html" %}
+{% load static %}
+
+{% block title %}Fault Report {{ object.reference_number }} | IBS{% endblock %}
+
+{% block content %}
+<section class="panel document-panel">
+    <header class="panel-header">
+        <div>
+            <h1>Fault Report {{ object.reference_number }}</h1>
+            <p>Detailed document view for IT asset fault or damage reporting.</p>
+        </div>
+        <div class="header-actions">
+            <a class="btn btn--secondary" href="{% url 'asset_faults:list' %}">Back to Log</a>
+            <a class="btn btn--primary" href="{% url 'asset_faults:update' object.pk %}">Edit Report</a>
+            <a
+                href="#"
+                class="btn btn--danger js-delete-trigger"
+                data-delete-url="{% url 'asset_faults:delete' object.pk %}"
+                data-reference="{{ object.reference_number }}"
+                data-delete-type="fault report"
+                data-delete-button="Delete Report"
+            >
+                Delete
+            </a>
+        </div>
+    </header>
+
+    <div class="document-body">
+        <div class="panel-section document-section">
+            <h2>Employee Info</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Employee Name</div>
+                    <div class="detail-value">{{ object.employee_name }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Job Title</div>
+                    <div class="detail-value">{{ object.job_title }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date</div>
+                    <div class="detail-value">{{ object.date|date:'D, F j, Y' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-section document-section">
+            <h2>Asset Info</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Asset Type</div>
+                    <div class="detail-value">{{ object.asset_type }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Asset Serial Number</div>
+                    <div class="detail-value mono-text">{{ object.asset_serial_number }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-section document-section">
+            <h2>Fault Details</h2>
+            <div class="detail-grid">
+                <div class="detail-item detail-item--full">
+                    <div class="detail-label">Fault Description</div>
+                    <div class="detail-value">{{ object.fault_description|linebreaksbr }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Severity</div>
+                    <div class="detail-value">{{ object.get_severity_display }}</div>
+                </div>
+                <div class="detail-item detail-item--full">
+                    <div class="detail-label">Actions Taken</div>
+                    <div class="detail-value">{{ object.actions_taken|default:'-'|linebreaksbr }}</div>
+                </div>
+                <div class="detail-item detail-item--full">
+                    <div class="detail-label">Additional Comments</div>
+                    <div class="detail-value">{{ object.additional_comments|default:'-'|linebreaksbr }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-section document-section">
+            <h2>IT Department Section</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Assigned To</div>
+                    <div class="detail-value">{{ object.assigned_to|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date Received</div>
+                    <div class="detail-value">{{ object.date_received|date:'D, F j, Y'|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Resolution Date</div>
+                    <div class="detail-value">{{ object.resolution_date|date:'D, F j, Y'|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">IT Signature</div>
+                    <div class="detail-value">
+                        {% if object.it_signature %}
+                            <span class="status-badge success">Signed</span>
+                        {% else %}
+                            <span class="status-badge warning">Pending</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-section document-section">
+            <h2>Approval</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Approved By</div>
+                    <div class="detail-value">{{ object.approved_by|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Approval Date</div>
+                    <div class="detail-value">{{ object.approval_date|date:'D, F j, Y'|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Approved Signature</div>
+                    <div class="detail-value">
+                        {% if object.approved_signature %}
+                            <span class="status-badge success">Signed</span>
+                        {% else %}
+                            <span class="status-badge warning">Pending</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

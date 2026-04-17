@@ -1,0 +1,136 @@
+{% extends "fault_logs/base.html" %}
+{% load static %}
+
+{% block title %}{% if object %}Update Fault Report{% else %}New Fault Report{% endif %} | IBS{% endblock %}
+
+{% block content %}
+<section class="panel document-panel">
+    <header class="panel-header">
+        <div>
+            <h1>{% if object %}Update Fault Report{% else %}Asset Fault or Damage Report{% endif %}</h1>
+            <p>Structured capture for IT asset fault and damage records.</p>
+        </div>
+        <a class="btn btn--secondary" href="{% url 'asset_faults:list' %}">Back to Log</a>
+    </header>
+
+    <form method="post" novalidate class="report-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="error-box">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <section class="panel-section document-section">
+            <h2>Employee Info</h2>
+            <div class="field-grid two-col">
+                <div class="field-block">
+                    <label for="{{ form.employee_name.id_for_label }}">{{ form.employee_name.label }}</label>
+                    {{ form.employee_name }}
+                    {% for error in form.employee_name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.job_title.id_for_label }}">{{ form.job_title.label }}</label>
+                    {{ form.job_title }}
+                    {% for error in form.job_title.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+                    {{ form.date }}
+                    {% for error in form.date.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="panel-section document-section">
+            <h2>Asset Info</h2>
+            <div class="field-grid two-col">
+                <div class="field-block">
+                    <label for="{{ form.asset_type.id_for_label }}">{{ form.asset_type.label }}</label>
+                    {{ form.asset_type }}
+                    {% for error in form.asset_type.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.asset_serial_number.id_for_label }}">{{ form.asset_serial_number.label }}</label>
+                    {{ form.asset_serial_number }}
+                    {% for error in form.asset_serial_number.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="panel-section document-section">
+            <h2>Fault Details</h2>
+            <div class="field-grid two-col">
+                <div class="field-block">
+                    <label for="{{ form.severity.id_for_label }}">{{ form.severity.label }}</label>
+                    {{ form.severity }}
+                    {% for error in form.severity.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block"></div>
+            </div>
+            <div class="field-grid one-col">
+                <div class="field-block">
+                    <label for="{{ form.fault_description.id_for_label }}">{{ form.fault_description.label }}</label>
+                    {{ form.fault_description }}
+                    {% for error in form.fault_description.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.actions_taken.id_for_label }}">{{ form.actions_taken.label }}</label>
+                    {{ form.actions_taken }}
+                    {% for error in form.actions_taken.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.additional_comments.id_for_label }}">{{ form.additional_comments.label }}</label>
+                    {{ form.additional_comments }}
+                    {% for error in form.additional_comments.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="panel-section document-section">
+            <h2>IT Department Section</h2>
+            <div class="field-grid two-col">
+                <div class="field-block">
+                    <label for="{{ form.assigned_to.id_for_label }}">{{ form.assigned_to.label }}</label>
+                    {{ form.assigned_to }}
+                    {% for error in form.assigned_to.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.date_received.id_for_label }}">{{ form.date_received.label }}</label>
+                    {{ form.date_received }}
+                    {% for error in form.date_received.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.resolution_date.id_for_label }}">{{ form.resolution_date.label }}</label>
+                    {{ form.resolution_date }}
+                    {% for error in form.resolution_date.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="panel-section document-section">
+            <h2>Approval</h2>
+            <div class="field-grid two-col">
+                <div class="field-block">
+                    <label for="{{ form.approved_by.id_for_label }}">{{ form.approved_by.label }}</label>
+                    {{ form.approved_by }}
+                    {% for error in form.approved_by.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.approval_date.id_for_label }}">{{ form.approval_date.label }}</label>
+                    {{ form.approval_date }}
+                    {% for error in form.approval_date.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary">{% if object %}Update Report{% else %}Submit Report{% endif %}</button>
+            <a class="btn btn--secondary" href="{% url 'asset_faults:list' %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

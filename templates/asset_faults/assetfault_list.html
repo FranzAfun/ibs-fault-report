@@ -1,0 +1,92 @@
+{% extends "fault_logs/base.html" %}
+{% load static %}
+
+{% block title %}Asset Fault Reports | IBS{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <header class="panel-header">
+        <div>
+            <h1>IT Asset Fault or Damage Reports</h1>
+            <p>Centralized operational table for employee-reported IT asset issues.</p>
+        </div>
+        <a class="btn btn--primary" href="{% url 'asset_faults:create' %}">New Fault Report</a>
+    </header>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Ref No.</th>
+                    <th>Date</th>
+                    <th>Employee</th>
+                    <th>Job Title</th>
+                    <th>Asset Type</th>
+                    <th>Severity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                    <tr>
+                        <td class="mono-text ref-cell">{{ record.reference_number }}</td>
+                        <td>{{ record.date|date:'D, F j, Y' }}</td>
+                        <td class="truncate-cell" title="{{ record.employee_name }}">{{ record.employee_name }}</td>
+                        <td>{{ record.job_title }}</td>
+                        <td>{{ record.asset_type }}</td>
+                        <td>{{ record.get_severity_display }}</td>
+                        <td class="actions-cell">
+                            <a
+                                href="{% url 'asset_faults:detail' record.pk %}"
+                                class="action-btn view-btn"
+                                aria-label="View fault report {{ record.reference_number }}"
+                                title="View"
+                            >
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </a>
+
+                            <a
+                                href="{% url 'asset_faults:update' record.pk %}"
+                                class="action-btn edit-btn"
+                                aria-label="Edit fault report {{ record.reference_number }}"
+                                title="Edit"
+                            >
+                                <i class="fas fa-edit" aria-hidden="true"></i>
+                            </a>
+
+                            <a
+                                href="#"
+                                class="action-btn delete-btn js-delete-trigger"
+                                data-delete-url="{% url 'asset_faults:delete' record.pk %}"
+                                data-reference="{{ record.reference_number }}"
+                                data-delete-type="fault report"
+                                data-delete-button="Delete Report"
+                                aria-label="Delete fault report {{ record.reference_number }}"
+                                title="Delete"
+                            >
+                                <i class="fas fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7" class="empty-row">No fault reports have been logged yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+        <nav class="pagination" aria-label="Asset fault report pagination">
+            {% if page_obj.has_previous %}
+                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}
