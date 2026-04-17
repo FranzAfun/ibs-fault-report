@@ -91,7 +91,7 @@
         </section>
 
         <section class="panel-section document-section">
-            <h2>IT Department Section</h2>
+            <h2>For IT Department Use Only</h2>
             <div class="field-grid two-col">
                 <div class="field-block">
                     <label for="{{ form.assigned_to.id_for_label }}">{{ form.assigned_to.label }}</label>
@@ -129,7 +129,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn--primary">{% if object %}Update Report{% else %}Submit Report{% endif %}</button>
-            <a class="btn btn--secondary" href="{% url 'asset_faults:list' %}">Cancel</a>
+            <a class="btn btn-secondary" href="{% url 'asset_faults:list' %}">Cancel</a>
         </div>
     </form>
 </section>

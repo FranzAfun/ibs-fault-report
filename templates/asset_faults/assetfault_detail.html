@@ -11,11 +11,11 @@
             <p>Detailed document view for IT asset fault or damage reporting.</p>
         </div>
         <div class="header-actions">
-            <a class="btn btn--secondary" href="{% url 'asset_faults:list' %}">Back to Log</a>
-            <a class="btn btn--primary" href="{% url 'asset_faults:update' object.pk %}">Edit Report</a>
+            <a class="btn btn-secondary" href="{% url 'asset_faults:list' %}">Back to Log</a>
+            <a class="btn btn-primary" href="{% url 'asset_faults:update' object.pk %}">Edit Report</a>
             <a
                 href="#"
-                class="btn btn--danger js-delete-trigger"
+                class="btn btn-danger js-delete-trigger"
                 data-delete-url="{% url 'asset_faults:delete' object.pk %}"
                 data-reference="{{ object.reference_number }}"
                 data-delete-type="fault report"
@@ -100,9 +100,9 @@
                     <div class="detail-label">IT Signature</div>
                     <div class="detail-value">
                         {% if object.it_signature %}
-                            <span class="status-badge success">Signed</span>
+                            <span class="badge badge-success status-badge success">Signed</span>
                         {% else %}
-                            <span class="status-badge warning">Pending</span>
+                            <span class="badge badge-warning status-badge warning">Pending</span>
                         {% endif %}
                     </div>
                 </div>
@@ -124,9 +124,9 @@
                     <div class="detail-label">Approved Signature</div>
                     <div class="detail-value">
                         {% if object.approved_signature %}
-                            <span class="status-badge success">Signed</span>
+                            <span class="badge badge-success status-badge success">Signed</span>
                         {% else %}
-                            <span class="status-badge warning">Pending</span>
+                            <span class="badge badge-warning status-badge warning">Pending</span>
                         {% endif %}
                     </div>
                 </div>
