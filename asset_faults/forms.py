@@ -32,3 +32,39 @@ class AssetFaultReportForm(forms.ModelForm):
             if isinstance(field.widget, forms.Textarea):
                 classes.append('input-textarea')
             field.widget.attrs['class'] = ' '.join(classes)
+
+
+class AssetFaultAssignForm(forms.ModelForm):
+    class Meta:
+        model = AssetFaultReport
+        fields = ['assigned_to', 'date_received']
+        widgets = {
+            'date_received': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            classes = ['input-control']
+            if isinstance(field.widget, forms.Textarea):
+                classes.append('input-textarea')
+            field.widget.attrs['class'] = ' '.join(classes)
+
+
+class AssetFaultResolveForm(forms.ModelForm):
+    class Meta:
+        model = AssetFaultReport
+        fields = ['resolution_date']
+        widgets = {
+            'resolution_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            classes = ['input-control']
+            if isinstance(field.widget, forms.Textarea):
+                classes.append('input-textarea')
+            field.widget.attrs['class'] = ' '.join(classes)

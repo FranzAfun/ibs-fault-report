@@ -4,7 +4,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from .forms import AssetFaultReportForm
+from .forms import AssetFaultAssignForm, AssetFaultReportForm, AssetFaultResolveForm
 from .models import AssetFaultReport
 
 
@@ -49,37 +49,47 @@ class AssetFaultCreateView(ModeContextMixin, CreateView):
 	form_class = AssetFaultReportForm
 	template_name = 'asset_faults/assetfault_form.html'
 
+	def dispatch(self, request, *args, **kwargs):
+		mode = self.get_mode()
+		if mode == 'it':
+			messages.warning(request, 'IT mode cannot create fault reports.')
+			list_url = reverse('asset_faults:list')
+			return redirect(_with_mode(list_url, mode))
+		return super().dispatch(request, *args, **kwargs)
+
 	def get_success_url(self):
 		list_url = reverse_lazy('asset_faults:list')
 		return _with_mode(str(list_url), self.get_mode())
 
 
 class AssetFaultUpdateView(ModeContextMixin, UpdateView):
-	model = AssetFaultReport
-	form_class = AssetFaultReportForm
-	template_name = 'asset_faults/assetfault_form.html'
+    model = AssetFaultReport
+    form_class = AssetFaultReportForm
+    template_name = 'asset_faults/assetfault_form.html'
 
-	def _locked_redirect(self, record: AssetFaultReport):
-		mode = self.get_mode()
-		messages.warning(self.request, 'This fault report is locked because it has been signed by IT.')
-		detail_url = reverse('asset_faults:detail', kwargs={'pk': record.pk})
-		return redirect(_with_mode(detail_url, mode))
+    def dispatch(self, request, *args, **kwargs):
+        mode = request.GET.get('mode', '')
+        obj = self.get_object()
 
-	def get(self, request, *args, **kwargs):
-		self.object = self.get_object()
-		if self.object.it_signature:
-			return self._locked_redirect(self.object)
-		return super().get(request, *args, **kwargs)
+        detail_url = reverse('asset_faults:detail', kwargs={'pk': obj.pk})
 
-	def post(self, request, *args, **kwargs):
-		self.object = self.get_object()
-		if self.object.it_signature:
-			return self._locked_redirect(self.object)
-		return super().post(request, *args, **kwargs)
+        if obj.it_signature:
+            messages.warning(request, 'This fault report is locked because it has been signed by IT.')
+            return redirect(_with_mode(detail_url, mode))
 
-	def get_success_url(self):
-		list_url = reverse_lazy('asset_faults:list')
-		return _with_mode(str(list_url), self.get_mode())
+        if mode == 'it':
+            messages.warning(request, 'IT mode cannot edit the full form. Use Assign, Sign, and Resolve actions.')
+            return redirect(_with_mode(detail_url, mode))
+
+        if mode == 'staff':
+            messages.warning(request, 'Staff mode cannot edit reports after creation.')
+            return redirect(_with_mode(detail_url, mode))
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        list_url = reverse_lazy('asset_faults:list')
+        return _with_mode(str(list_url), self.get_mode())
 
 
 class AssetFaultDeleteView(ModeContextMixin, DeleteView):
@@ -91,9 +101,14 @@ class AssetFaultDeleteView(ModeContextMixin, DeleteView):
 		self.object = self.get_object()
 		mode = self.get_mode()
 
+		detail_url = reverse('asset_faults:detail', kwargs={'pk': self.object.pk})
+
+		if mode in {'staff', 'it'}:
+			messages.warning(request, 'Delete action is not available for this role mode.')
+			return redirect(_with_mode(detail_url, mode))
+
 		if self.object.it_signature:
 			messages.warning(request, 'This fault report is locked because it has been signed by IT.')
-			detail_url = reverse('asset_faults:detail', kwargs={'pk': self.object.pk})
 			return redirect(_with_mode(detail_url, mode))
 
 		reference_number = self.object.reference_number
@@ -102,19 +117,68 @@ class AssetFaultDeleteView(ModeContextMixin, DeleteView):
 		return redirect(_with_mode(str(self.success_url), mode))
 
 
+class AssetFaultAssignView(ModeContextMixin, UpdateView):
+	model = AssetFaultReport
+	form_class = AssetFaultAssignForm
+	template_name = 'asset_faults/assetfault_assign_form.html'
+
+	def dispatch(self, request, *args, **kwargs):
+		self.object = self.get_object()
+		mode = self.get_mode()
+		detail_url = reverse('asset_faults:detail', kwargs={'pk': self.object.pk})
+
+		if mode != 'it':
+			messages.warning(request, 'Only IT mode can assign this report.')
+			return redirect(_with_mode(detail_url, mode))
+
+		if self.object.it_signature:
+			messages.warning(request, 'This report is already signed and locked. Assignment is no longer available.')
+			return redirect(_with_mode(detail_url, mode))
+
+		return super().dispatch(request, *args, **kwargs)
+
+	def get_success_url(self):
+		detail_url = reverse_lazy('asset_faults:detail', kwargs={'pk': self.object.pk})
+		return _with_mode(str(detail_url), self.get_mode())
+
+
+class AssetFaultResolveView(ModeContextMixin, UpdateView):
+	model = AssetFaultReport
+	form_class = AssetFaultResolveForm
+	template_name = 'asset_faults/assetfault_resolve_form.html'
+
+	def dispatch(self, request, *args, **kwargs):
+		self.object = self.get_object()
+		mode = self.get_mode()
+		detail_url = reverse('asset_faults:detail', kwargs={'pk': self.object.pk})
+
+		if mode != 'it':
+			messages.warning(request, 'Only IT mode can update the resolution date.')
+			return redirect(_with_mode(detail_url, mode))
+
+		if not self.object.it_signature:
+			messages.warning(request, 'Resolution date can only be set after IT signature.')
+			return redirect(_with_mode(detail_url, mode))
+
+		return super().dispatch(request, *args, **kwargs)
+
+	def get_success_url(self):
+		detail_url = reverse_lazy('asset_faults:detail', kwargs={'pk': self.object.pk})
+		return _with_mode(str(detail_url), self.get_mode())
+
+
 class AssetFaultSignView(View):
-	http_method_names = ['post']
+    http_method_names = ['post']
 
-	def post(self, request, pk):
-		record = get_object_or_404(AssetFaultReport, pk=pk)
-		mode = request.GET.get('mode', '')
+    def post(self, request, pk):
+        obj = get_object_or_404(AssetFaultReport, pk=pk)
+        mode = request.GET.get('mode', '')
 
-		if mode == 'it' and not record.it_signature:
-			record.it_signature = True
-			record.save(update_fields=['it_signature'])
-			messages.success(request, 'IT signature recorded successfully.')
-		elif mode != 'it':
-			messages.warning(request, 'Only IT mode can sign fault reports.')
+        if mode != 'it' or obj.it_signature:
+            return redirect(_with_mode(reverse('asset_faults:detail', kwargs={'pk': pk}), mode))
 
-		detail_url = reverse('asset_faults:detail', kwargs={'pk': record.pk})
-		return redirect(_with_mode(detail_url, mode))
+        obj.it_signature = True
+        obj.save(update_fields=['it_signature'])
+        messages.success(request, 'IT signature recorded successfully.')
+
+        return redirect(_with_mode(reverse('asset_faults:detail', kwargs={'pk': pk}), 'it'))
