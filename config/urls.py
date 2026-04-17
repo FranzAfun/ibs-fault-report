@@ -26,6 +26,7 @@ urlpatterns = [
     path('faults/', include('fault_logs.urls')),
     path('ppe/', include('ppe_records.urls')),
     path('assets/', include('assets.urls')),
+    path('asset-faults/', include('asset_faults.urls')),
     path('home/', include('core.urls')),
 ]
 
