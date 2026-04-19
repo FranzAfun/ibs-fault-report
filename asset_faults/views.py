@@ -157,7 +157,11 @@ class AssetFaultResolveView(ModeContextMixin, UpdateView):
 			return redirect(_with_mode(detail_url, mode))
 
 		if not self.object.it_signature:
-			messages.warning(request, 'Resolution date can only be set after IT signature.')
+			messages.warning(request, 'Resolution details can only be set after IT signature.')
+			return redirect(_with_mode(detail_url, mode))
+
+		if self.object.resolution_date is not None:
+			messages.warning(request, 'Resolution has already been recorded and cannot be edited again.')
 			return redirect(_with_mode(detail_url, mode))
 
 		return super().dispatch(request, *args, **kwargs)

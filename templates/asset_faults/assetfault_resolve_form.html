@@ -32,11 +32,16 @@
                     {{ form.resolution_date }}
                     {% for error in form.resolution_date.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
                 </div>
+                <div class="field-block field-block--full">
+                    <label for="{{ form.resolution_description.id_for_label }}">{{ form.resolution_description.label }}</label>
+                    {{ form.resolution_description }}
+                    {% for error in form.resolution_description.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
             </div>
         </section>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn--primary">Save Resolution Date</button>
+            <button type="submit" class="btn btn--primary">Save Resolution</button>
             <a class="btn btn-secondary" href="{% url 'asset_faults:detail' object.pk %}{% if mode %}?mode={{ mode }}{% endif %}">Cancel</a>
         </div>
     </form>

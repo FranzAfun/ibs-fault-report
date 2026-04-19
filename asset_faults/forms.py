@@ -55,9 +55,10 @@ class AssetFaultAssignForm(forms.ModelForm):
 class AssetFaultResolveForm(forms.ModelForm):
     class Meta:
         model = AssetFaultReport
-        fields = ['resolution_date']
+        fields = ['resolution_date', 'resolution_description']
         widgets = {
             'resolution_date': forms.DateInput(attrs={'type': 'date'}),
+            'resolution_description': forms.Textarea(attrs={'rows': 4}),
         }
 
     def __init__(self, *args, **kwargs):

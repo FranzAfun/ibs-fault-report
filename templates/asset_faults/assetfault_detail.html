@@ -122,6 +122,12 @@
                     <div class="detail-label">Resolution Date</div>
                     <div class="detail-value">{{ object.resolution_date|date:'D, F j, Y'|default:'-' }}</div>
                 </div>
+                {% if object.resolution_description %}
+                <div class="detail-item detail-item--full">
+                    <div class="detail-label">Resolution Description</div>
+                    <div class="detail-value">{{ object.resolution_description|linebreaksbr }}</div>
+                </div>
+                {% endif %}
                 <div class="detail-item">
                     <div class="detail-label">IT Signature</div>
                     <div class="detail-value">
