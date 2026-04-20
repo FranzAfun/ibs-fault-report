@@ -9,6 +9,7 @@ Current modules:
 - PPE Issue Management
 - Employee-Issued IT Assets Management
 - IT Asset Fault/Damage Management
+- Checkbook Register Management
 
 The architecture and module boundaries are intentionally structured for ERP integration and phased expansion.
 
@@ -23,10 +24,11 @@ This repository represents an operations domain slice that will plug into a bigg
 - Use mode-based behavior (`?mode=...`) to simulate role context at UI/workflow level.
 - Preserve locking rules (signatures/resolution) to prevent state corruption.
 
-Planned next phase:
+Current integration direction:
 
-- Additional modules will be added incrementally (HR, procurement, approvals, analytics, and integration adapters).
-- Existing modules will be aligned to the ibs ERP authentication/authorization while preserving current workflow constraints.
+- Existing modules are considered functionally complete for the current scope.
+- Existing modules are ready for integration into the larger IBS ERP platform.
+- Whether additional modules will be added in this repository is currently unknown.
 
 ---
 
@@ -107,6 +109,22 @@ Base route:
 
 - `/asset-faults/`
 
+### 6) Checkbook Register Management (`checkbook`)
+
+Purpose:
+
+- Capture and maintain checkbook register transactions.
+
+Core capabilities:
+
+- Create, list, detail, update, delete.
+- Reference-numbered entries with transaction metadata.
+- Financial columns for withdrawal, deposit, and balance.
+
+Base route:
+
+- `/checkbook/`
+
 ---
 
 ## Route Map
@@ -118,6 +136,7 @@ Base route:
 - PPE Records: `/ppe/`
 - Asset Records: `/assets/`
 - Asset Faults: `/asset-faults/`
+- Checkbook: `/checkbook/`
 - Legacy home include: `/home/`
 
 ### Fault Logs (`/faults/`)
@@ -158,6 +177,14 @@ Base route:
 - Assign (IT workflow): `/asset-faults/<id>/assign/`
 - Sign (IT workflow, POST): `/asset-faults/<id>/sign/`
 - Resolve (IT workflow): `/asset-faults/<id>/resolve/`
+
+### Checkbook (`/checkbook/`)
+
+- List: `/checkbook/`
+- Create: `/checkbook/new/`
+- Detail: `/checkbook/<id>/`
+- Edit: `/checkbook/<id>/edit/`
+- Delete (POST): `/checkbook/<id>/delete/`
 
 ---
 
@@ -238,6 +265,8 @@ Important note about typos:
 - Asset Fault list: `/asset-faults/`
 - Asset Fault detail in IT mode: `/asset-faults/5/?mode=it`
 - Asset Fault resolve page in IT mode: `/asset-faults/5/resolve/?mode=it`
+- Checkbook list: `/checkbook/`
+- Checkbook detail: `/checkbook/5/`
 
 ---
 
@@ -261,9 +290,13 @@ ibs-fault-report/
 ├── asset_faults/
 │   ├── migrations/
 │   └── ...
+├── checkbook/
+│   ├── migrations/
+│   └── ...
 ├── templates/
 │   ├── dashboard/
-│   └── asset_faults/
+│   ├── asset_faults/
+│   └── checkbook/
 ├── media/
 ├── db.sqlite3
 ├── manage.py
@@ -284,6 +317,7 @@ ibs-fault-report/
   - `ppe_records`
   - `assets`
   - `asset_faults`
+  - `checkbook`
   - `core`
 
 ---
@@ -297,12 +331,17 @@ Current state:
 - PPE module: active with signature and lock constraints.
 - Assets module: active with signature and lock constraints.
 - Asset Faults module: active with IT assign/sign/resolve workflow and one-time resolution lock.
+- Checkbook module: active with full CRUD transaction register workflow.
 
 Roadmap:
 
-- More ibs ERP modules(digital forms) will be added.
+- Whether additional modules are added to this repository remains undecided.
 - Existing mode-based behavior will transition to centralized ERP role/permission enforcement.
 - API and integration adapters will be introduced as ERP orchestration layer is finalized.
+
+Integration readiness note:
+
+- All modules currently present in this system are complete for the current scope and ready for ERP integration.
 
 ---
 
