@@ -1,0 +1,87 @@
+{% extends "fault_logs/base.html" %}
+{% load static %}
+
+{% block title %}Checkbook Entry {{ entry.reference_number }} | IBS{% endblock %}
+
+{% block content %}
+<section class="panel document-panel">
+    <header class="panel-header">
+        <div>
+            <h1>Checkbook Entry {{ entry.reference_number }}</h1>
+            <p>Detailed transaction record for the checkbook register.</p>
+        </div>
+        <div class="header-actions">
+            <a class="btn btn--secondary" href="{% url 'checkbook:list' %}">Back to Log</a>
+            <a class="btn btn--primary" href="{% url 'checkbook:update' entry.pk %}">Edit Entry</a>
+            <a
+                href="#"
+                class="btn btn--danger js-delete-trigger"
+                data-delete-url="{% url 'checkbook:delete' entry.pk %}"
+                data-reference="{{ entry.reference_number }}"
+                data-delete-type="checkbook entry"
+                data-delete-button="Delete Entry"
+            >
+                Delete
+            </a>
+        </div>
+    </header>
+
+    <div class="document-body">
+        <div class="document-section">
+            <h2>Transaction Info</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Date</div>
+                    <div class="detail-value">{{ entry.date|date:'D, F j, Y' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Ref Code</div>
+                    <div class="detail-value">{{ entry.ref_code|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Num</div>
+                    <div class="detail-value">{{ entry.num|default:'-' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Description</h2>
+            <div class="detail-grid">
+                <div class="detail-item detail-item--full">
+                    <div class="detail-label">Description</div>
+                    <div class="detail-value">{{ entry.description|linebreaksbr }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Category</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Category</div>
+                    <div class="detail-value">{{ entry.category|default:'-' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Amounts</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Withdrawal Amount</div>
+                    <div class="detail-value">{{ entry.withdrawal_amount|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Deposit Amount</div>
+                    <div class="detail-value">{{ entry.deposit_amount|default:'-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Balance</div>
+                    <div class="detail-value">{{ entry.balance }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

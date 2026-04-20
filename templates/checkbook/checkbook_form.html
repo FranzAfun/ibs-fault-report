@@ -1,0 +1,97 @@
+{% extends "fault_logs/base.html" %}
+{% load static %}
+
+{% block title %}{% if object %}Update Checkbook Entry{% else %}New Checkbook Entry{% endif %} | IBS{% endblock %}
+
+{% block content %}
+<section class="panel document-panel">
+    <header class="panel-header">
+        <div>
+            <h1>{% if object %}Update Checkbook Entry{% else %}Checkbook Entry Submission{% endif %}</h1>
+            <p>Structured capture for checkbook register transactions.</p>
+        </div>
+        <a class="btn btn--secondary" href="{% url 'checkbook:list' %}">Back to Log</a>
+    </header>
+
+    <form method="post" novalidate class="report-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="error-box">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <section class="document-section">
+            <h2>Transaction Info</h2>
+            <div class="field-grid two-col">
+                <div class="field-block">
+                    <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+                    {{ form.date }}
+                    {% for error in form.date.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.ref_code.id_for_label }}">{{ form.ref_code.label }}</label>
+                    {{ form.ref_code }}
+                    {% for error in form.ref_code.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.num.id_for_label }}">{{ form.num.label }}</label>
+                    {{ form.num }}
+                    {% for error in form.num.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="document-section">
+            <h2>Description</h2>
+            <div class="field-grid two-col">
+                <div class="field-block field-block--full">
+                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                    {{ form.description }}
+                    {% for error in form.description.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="document-section">
+            <h2>Category</h2>
+            <div class="field-grid two-col">
+                <div class="field-block">
+                    <label for="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+                    {{ form.category }}
+                    {% for error in form.category.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="document-section">
+            <h2>Amounts</h2>
+            <div class="field-grid two-col">
+                <div class="field-block">
+                    <label for="{{ form.withdrawal_amount.id_for_label }}">{{ form.withdrawal_amount.label }}</label>
+                    {{ form.withdrawal_amount }}
+                    {% for error in form.withdrawal_amount.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.deposit_amount.id_for_label }}">{{ form.deposit_amount.label }}</label>
+                    {{ form.deposit_amount }}
+                    {% for error in form.deposit_amount.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-block">
+                    <label for="{{ form.balance.id_for_label }}">{{ form.balance.label }}</label>
+                    {{ form.balance }}
+                    {% for error in form.balance.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary">{% if object %}Update Entry{% else %}Submit Entry{% endif %}</button>
+            <a class="btn btn--secondary" href="{% url 'checkbook:list' %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

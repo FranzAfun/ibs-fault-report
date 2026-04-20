@@ -1,0 +1,98 @@
+{% extends "fault_logs/base.html" %}
+{% load static %}
+
+{% block title %}Checkbook Register | IBS{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <header class="panel-header">
+        <div>
+            <h1>Checkbook Register</h1>
+            <p>Centralized operational table for checkbook transactions.</p>
+        </div>
+        <a class="btn btn--primary" href="{% url 'checkbook:create' %}">New Entry</a>
+    </header>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Ref No.</th>
+                    <th>Date</th>
+                    <th>Ref Code</th>
+                    <th>Num</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Withdrawal</th>
+                    <th>Deposit</th>
+                    <th>Balance</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                    <tr>
+                        <td class="mono-text ref-cell">{{ entry.reference_number }}</td>
+                        <td>{{ entry.date|date:'D, F j, Y' }}</td>
+                        <td>{{ entry.ref_code|default:'-' }}</td>
+                        <td>{{ entry.num|default:'-' }}</td>
+                        <td class="truncate-cell" title="{{ entry.description }}">{{ entry.description }}</td>
+                        <td>{{ entry.category|default:'-' }}</td>
+                        <td>{{ entry.withdrawal_amount|default:'-' }}</td>
+                        <td>{{ entry.deposit_amount|default:'-' }}</td>
+                        <td>{{ entry.balance }}</td>
+                        <td class="actions-cell">
+                            <a
+                                href="{% url 'checkbook:detail' entry.pk %}"
+                                class="action-btn view-btn"
+                                aria-label="View checkbook entry {{ entry.reference_number }}"
+                                title="View"
+                            >
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </a>
+
+                            <a
+                                href="{% url 'checkbook:update' entry.pk %}"
+                                class="action-btn edit-btn"
+                                aria-label="Edit checkbook entry {{ entry.reference_number }}"
+                                title="Edit"
+                            >
+                                <i class="fas fa-edit" aria-hidden="true"></i>
+                            </a>
+
+                            <a
+                                href="#"
+                                class="action-btn delete-btn js-delete-trigger"
+                                data-delete-url="{% url 'checkbook:delete' entry.pk %}"
+                                data-reference="{{ entry.reference_number }}"
+                                data-delete-type="checkbook entry"
+                                data-delete-button="Delete Entry"
+                                aria-label="Delete checkbook entry {{ entry.reference_number }}"
+                                title="Delete"
+                            >
+                                <i class="fas fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="10" class="empty-row">No checkbook entries have been logged yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+        <nav class="pagination" aria-label="Checkbook entry pagination">
+            {% if page_obj.has_previous %}
+                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}
