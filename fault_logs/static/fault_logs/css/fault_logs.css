@@ -649,6 +649,41 @@ a:not(.btn):not(.action-btn):not(.icon-btn):not(.back-link):hover {
     gap: 6px;
 }
 
+.text-end {
+  text-align: right;
+}
+
+.fw-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.input-group {
+  display: flex;
+  width: 100%;
+}
+
+.input-group-text {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--color-neutral-200);
+  border-right: 0;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  background: var(--color-neutral-0);
+  color: var(--color-neutral-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.input-group .input-control {
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
 .input-control {
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
@@ -1349,6 +1384,130 @@ a.icon-btn:hover {
 .card-container .data-table tbody tr:hover {
   background: #f9fafb;
   transition: 0.2s;
+}
+
+/* ===== CHECKBOOK REGISTER TABLE ===== */
+
+.checkbook-register {
+  max-width: 1520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.checkbook-register .panel-header {
+  padding: 22px 30px;
+}
+
+.checkbook-table-wrap {
+  overflow-x: auto;
+}
+
+.checkbook-table {
+  table-layout: fixed;
+  min-width: 1260px;
+}
+
+.checkbook-table .checkbook-col-ref {
+  width: 11%;
+}
+
+.checkbook-table .checkbook-col-date {
+  width: 12%;
+}
+
+.checkbook-table .checkbook-col-code {
+  width: 8%;
+}
+
+.checkbook-table .checkbook-col-num {
+  width: 7%;
+}
+
+.checkbook-table .checkbook-col-description {
+  width: 18%;
+}
+
+.checkbook-table .checkbook-col-category {
+  width: 8%;
+}
+
+.checkbook-table .checkbook-col-money {
+  width: 11%;
+}
+
+.checkbook-table .checkbook-col-actions {
+  width: 14%;
+}
+
+.checkbook-table th,
+.checkbook-table td {
+  padding: 13px 12px;
+  vertical-align: middle;
+  line-height: 1.35;
+}
+
+.checkbook-table th {
+  background: #f8fafc;
+  color: var(--color-neutral-600);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.04em;
+  border-top: 1px solid var(--color-neutral-100);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.checkbook-table th.text-center {
+  text-align: center;
+}
+
+.checkbook-table th.text-end {
+  text-align: right;
+}
+
+.checkbook-table tbody tr {
+  border-top: 0;
+  border-bottom: 1px solid var(--color-neutral-100);
+}
+
+.checkbook-table tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.checkbook-table td {
+  color: var(--color-neutral-800);
+}
+
+.checkbook-table .ref-cell,
+.checkbook-table .text-end {
+  font-variant-numeric: tabular-nums;
+}
+
+.checkbook-table .truncate-cell {
+  max-width: none;
+}
+
+.checkbook-table .actions-cell {
+  min-width: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.checkbook-table .action-btn {
+  width: 34px;
+  height: 34px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.checkbook-table .action-btn:last-child {
+  margin-right: 0;
+}
+
+@media (max-width: 900px) {
+  .checkbook-register .panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
 }
 
 .status-badge {

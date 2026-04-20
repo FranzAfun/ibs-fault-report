@@ -72,17 +72,26 @@
             <div class="field-grid two-col">
                 <div class="field-block">
                     <label for="{{ form.withdrawal_amount.id_for_label }}">{{ form.withdrawal_amount.label }}</label>
-                    {{ form.withdrawal_amount }}
+                    <div class="input-group">
+                        <span class="input-group-text">GHS</span>
+                        {{ form.withdrawal_amount }}
+                    </div>
                     {% for error in form.withdrawal_amount.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
                 </div>
                 <div class="field-block">
                     <label for="{{ form.deposit_amount.id_for_label }}">{{ form.deposit_amount.label }}</label>
-                    {{ form.deposit_amount }}
+                    <div class="input-group">
+                        <span class="input-group-text">GHS</span>
+                        {{ form.deposit_amount }}
+                    </div>
                     {% for error in form.deposit_amount.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
                 </div>
                 <div class="field-block">
                     <label for="{{ form.balance.id_for_label }}">{{ form.balance.label }}</label>
-                    {{ form.balance }}
+                    <div class="input-group">
+                        <span class="input-group-text">GHS</span>
+                        {{ form.balance }}
+                    </div>
                     {% for error in form.balance.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
                 </div>
             </div>

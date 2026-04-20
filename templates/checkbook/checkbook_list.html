@@ -4,7 +4,7 @@
 {% block title %}Checkbook Register | IBS{% endblock %}
 
 {% block content %}
-<section class="panel">
+<section class="panel checkbook-register">
     <header class="panel-header">
         <div>
             <h1>Checkbook Register</h1>
@@ -13,34 +13,46 @@
         <a class="btn btn--primary" href="{% url 'checkbook:create' %}">New Entry</a>
     </header>
 
-    <div class="table-wrap">
-        <table class="data-table">
+    <div class="table-wrap checkbook-table-wrap">
+        <table class="data-table checkbook-table">
+            <colgroup>
+                <col class="checkbook-col-ref">
+                <col class="checkbook-col-date">
+                <col class="checkbook-col-code">
+                <col class="checkbook-col-num">
+                <col class="checkbook-col-description">
+                <col class="checkbook-col-category">
+                <col class="checkbook-col-money">
+                <col class="checkbook-col-money">
+                <col class="checkbook-col-money">
+                <col class="checkbook-col-actions">
+            </colgroup>
             <thead>
                 <tr>
-                    <th>Ref No.</th>
-                    <th>Date</th>
-                    <th>Ref Code</th>
-                    <th>Num</th>
+                    <th class="text-center">Ref No.</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Ref Code</th>
+                    <th class="text-center">Num</th>
                     <th>Description</th>
-                    <th>Category</th>
-                    <th>Withdrawal</th>
-                    <th>Deposit</th>
-                    <th>Balance</th>
-                    <th>Actions</th>
+                    <th class="text-center">Category</th>
+                    <th class="text-end">WITHDRAWAL (GHS)</th>
+                    <th class="text-end">DEPOSIT (GHS)</th>
+                    <th class="text-end">BALANCE (GHS)</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for entry in entries %}
                     <tr>
-                        <td class="mono-text ref-cell">{{ entry.reference_number }}</td>
-                        <td>{{ entry.date|date:'D, F j, Y' }}</td>
-                        <td>{{ entry.ref_code|default:'-' }}</td>
-                        <td>{{ entry.num|default:'-' }}</td>
+                        <td class="mono-text ref-cell text-center">{{ entry.reference_number }}</td>
+                        <td class="text-center">{{ entry.date|date:'D, F j, Y' }}</td>
+                        <td class="text-center">{{ entry.ref_code|default:'-' }}</td>
+                        <td class="text-center">{{ entry.num|default:'-' }}</td>
                         <td class="truncate-cell" title="{{ entry.description }}">{{ entry.description }}</td>
-                        <td>{{ entry.category|default:'-' }}</td>
-                        <td>{{ entry.withdrawal_amount|default:'-' }}</td>
-                        <td>{{ entry.deposit_amount|default:'-' }}</td>
-                        <td>{{ entry.balance }}</td>
+                        <td class="text-center">{{ entry.category|default:'-' }}</td>
+                        <td class="text-end">{{ entry.withdrawal_amount|default:"-" }}</td>
+                        <td class="text-end">{{ entry.deposit_amount|default:"-" }}</td>
+                        <td class="text-end fw-semibold">{{ entry.balance }}</td>
                         <td class="actions-cell">
                             <a
                                 href="{% url 'checkbook:detail' entry.pk %}"
