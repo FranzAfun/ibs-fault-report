@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'asset_faults',
     'assets',
+    'checkbook',
     'core',
     'dashboard',
     'fault_logs',
