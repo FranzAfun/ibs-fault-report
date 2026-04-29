@@ -18,20 +18,20 @@ class AssetFaultReportForm(forms.ModelForm):
             'additional_comments',
         ]
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'fault_description': forms.Textarea(attrs={'rows': 4}),
-            'actions_taken': forms.Textarea(attrs={'rows': 4}),
-            'additional_comments': forms.Textarea(attrs={'rows': 4}),
+            'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'fault_description': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
+            'actions_taken': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
+            'additional_comments': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        for field_name, field in self.fields.items():
-            classes = ['input-control']
-            if isinstance(field.widget, forms.Textarea):
-                classes.append('input-textarea')
-            field.widget.attrs['class'] = ' '.join(classes)
+        for _, field in self.fields.items():
+            if 'class' not in field.widget.attrs:
+                if isinstance(field.widget, forms.Select):
+                    field.widget.attrs['class'] = 'form-select'
+                else:
+                    field.widget.attrs['class'] = 'form-control'
 
 
 class AssetFaultAssignForm(forms.ModelForm):
@@ -39,17 +39,17 @@ class AssetFaultAssignForm(forms.ModelForm):
         model = AssetFaultReport
         fields = ['assigned_to', 'date_received']
         widgets = {
-            'date_received': forms.DateInput(attrs={'type': 'date'}),
+            'date_received': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        for field_name, field in self.fields.items():
-            classes = ['input-control']
-            if isinstance(field.widget, forms.Textarea):
-                classes.append('input-textarea')
-            field.widget.attrs['class'] = ' '.join(classes)
+        for _, field in self.fields.items():
+            if 'class' not in field.widget.attrs:
+                if isinstance(field.widget, forms.Select):
+                    field.widget.attrs['class'] = 'form-select'
+                else:
+                    field.widget.attrs['class'] = 'form-control'
 
 
 class AssetFaultResolveForm(forms.ModelForm):
@@ -57,15 +57,15 @@ class AssetFaultResolveForm(forms.ModelForm):
         model = AssetFaultReport
         fields = ['resolution_date', 'resolution_description']
         widgets = {
-            'resolution_date': forms.DateInput(attrs={'type': 'date'}),
-            'resolution_description': forms.Textarea(attrs={'rows': 4}),
+            'resolution_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'resolution_description': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        for field_name, field in self.fields.items():
-            classes = ['input-control']
-            if isinstance(field.widget, forms.Textarea):
-                classes.append('input-textarea')
-            field.widget.attrs['class'] = ' '.join(classes)
+        for _, field in self.fields.items():
+            if 'class' not in field.widget.attrs:
+                if isinstance(field.widget, forms.Select):
+                    field.widget.attrs['class'] = 'form-select'
+                else:
+                    field.widget.attrs['class'] = 'form-control'

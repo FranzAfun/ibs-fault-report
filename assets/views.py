@@ -20,7 +20,6 @@ class AssetRecordListView(ListView):
 	model = AssetRecord
 	context_object_name = 'asset_records'
 	template_name = 'assets/asset_list.html'
-	paginate_by = 25
 
 	def get_queryset(self):
 		return AssetRecord.objects.prefetch_related('items').annotate(
@@ -139,7 +138,7 @@ class AssetRecordDeleteView(DeleteView):
 	success_url = reverse_lazy('assets:asset-list')
 	http_method_names = ['post']
 
-	def post(self, request, *args, **kwargs):
+	def post(self, request, *args, **kwargs):  # noqa: ARG002
 		self.object = self.get_object()
 		mode = request.GET.get('mode', '')
 

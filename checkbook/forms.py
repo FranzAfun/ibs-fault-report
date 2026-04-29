@@ -17,15 +17,15 @@ class CheckbookEntryForm(forms.ModelForm):
             'balance',
         ]
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'description': forms.Textarea(),
+            'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'input-control'
-
-            if isinstance(field.widget, forms.Textarea):
-                field.widget.attrs['class'] += ' input-textarea'
+        for _, field in self.fields.items():
+            if 'class' not in field.widget.attrs:
+                if isinstance(field.widget, forms.Select):
+                    field.widget.attrs['class'] = 'form-select'
+                else:
+                    field.widget.attrs['class'] = 'form-control'

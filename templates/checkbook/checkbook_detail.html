@@ -1,87 +1,142 @@
-{% extends "fault_logs/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Checkbook Entry {{ entry.reference_number }} | IBS{% endblock %}
 
 {% block content %}
-<section class="panel document-panel">
-    <header class="panel-header">
-        <div>
-            <h1>Checkbook Entry {{ entry.reference_number }}</h1>
-            <p>Detailed transaction record for the checkbook register.</p>
-        </div>
-        <div class="header-actions">
-            <a class="btn btn--secondary" href="{% url 'checkbook:list' %}">Back to Log</a>
-            <a class="btn btn--primary" href="{% url 'checkbook:update' entry.pk %}">Edit Entry</a>
-            <a
-                href="#"
-                class="btn btn--danger js-delete-trigger"
-                data-delete-url="{% url 'checkbook:delete' entry.pk %}"
-                data-reference="{{ entry.reference_number }}"
-                data-delete-type="checkbook entry"
-                data-delete-button="Delete Entry"
-            >
-                Delete
-            </a>
-        </div>
-    </header>
+<div class="page-title-head d-flex align-items-center">
+  <div class="flex-grow-1 d-flex align-items-center">
+    <h4 class="fs-sm text-uppercase fw-bold m-0">Checkbook</h4>
+  </div>
+  <div class="text-end">
+    <ol class="breadcrumb m-0 py-0">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'checkbook:list' %}">Checkbook Register</a></li>
+      <li class="breadcrumb-item active">{{ entry.reference_number }}</li>
+    </ol>
+  </div>
+</div>
 
-    <div class="document-body">
-        <div class="document-section">
-            <h2>Transaction Info</h2>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <div class="detail-label">Date</div>
-                    <div class="detail-value">{{ entry.date|date:'D, F j, Y' }}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Ref Code</div>
-                    <div class="detail-value">{{ entry.ref_code|default:'-' }}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Num</div>
-                    <div class="detail-value">{{ entry.num|default:'-' }}</div>
-                </div>
-            </div>
-        </div>
+<div class="row mt-3">
 
-        <div class="document-section">
-            <h2>Description</h2>
-            <div class="detail-grid">
-                <div class="detail-item detail-item--full">
-                    <div class="detail-label">Description</div>
-                    <div class="detail-value">{{ entry.description|linebreaksbr }}</div>
-                </div>
-            </div>
+  {# Main Content #}
+  <div class="col-xl-9">
+    <div class="card border-5 border-white mb-3">
+      <div class="card-header">
+        <h4>Checkbook Entry: <span class="font-monospace">{{ entry.reference_number }}</span></h4>
+      </div>
+      <div class="card-body">
+
+        {# Transaction Info #}
+        <h6 class="text-uppercase text-muted fw-semibold mb-2 fs-xxs">Transaction Information</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <div class="text-muted small">Reference No.</div>
+            <div class="font-monospace fw-semibold">{{ entry.reference_number }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small">Date</div>
+            <div>{{ entry.date|date:'D, F j, Y' }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small">Ref Code</div>
+            <div class="font-monospace">{{ entry.ref_code|default:'-' }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small">Num</div>
+            <div class="font-monospace">{{ entry.num|default:'-' }}</div>
+          </div>
         </div>
 
-        <div class="document-section">
-            <h2>Category</h2>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <div class="detail-label">Category</div>
-                    <div class="detail-value">{{ entry.category|default:'-' }}</div>
-                </div>
-            </div>
+        <hr>
+
+        {# Description & Category #}
+        <h6 class="text-uppercase text-muted fw-semibold mb-2 fs-xxs">Details</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-md-8">
+            <div class="text-muted small">Description</div>
+            <div>{{ entry.description|linebreaksbr }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small">Category</div>
+            <div>{{ entry.category|default:'-' }}</div>
+          </div>
         </div>
 
-        <div class="document-section">
-            <h2>Amounts</h2>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <div class="detail-label">Withdrawal Amount</div>
-                    <div class="detail-value">{{ entry.withdrawal_amount|default:'-' }}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Deposit Amount</div>
-                    <div class="detail-value">{{ entry.deposit_amount|default:'-' }}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Balance</div>
-                    <div class="detail-value">{{ entry.balance }}</div>
-                </div>
+        <hr>
+
+        {# Amounts #}
+        <h6 class="text-uppercase text-muted fw-semibold mb-2 fs-xxs">Amounts (GHS)</h6>
+        <div class="row g-3 mb-2">
+          <div class="col-md-4">
+            <div class="text-muted small">Withdrawal</div>
+            <div class="fw-semibold {% if entry.withdrawal_amount %}text-danger{% endif %}">
+              {{ entry.withdrawal_amount|default:'-' }}
             </div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small">Deposit</div>
+            <div class="fw-semibold {% if entry.deposit_amount %}text-success{% endif %}">
+              {{ entry.deposit_amount|default:'-' }}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small">Balance</div>
+            <div class="fw-semibold">{{ entry.balance }}</div>
+          </div>
         </div>
+
+      </div>
     </div>
-</section>
+  </div>
+
+  {# Sidebar Actions #}
+  <div class="col-xl-3">
+    <div class="card border-5 border-white">
+      <div class="card-header">
+        <h6 class="mb-0">Actions</h6>
+      </div>
+      <div class="card-body d-grid gap-2">
+        <a href="{% url 'checkbook:list' %}" class="btn btn-sm btn-secondary">
+          <i class="ti ti-arrow-left me-1"></i> Back to Register
+        </a>
+        <a href="{% url 'checkbook:update' entry.pk %}" class="btn btn-sm btn-warning">
+          <i class="ti ti-pencil me-1"></i> Edit Entry
+        </a>
+        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+          <i class="ti ti-trash me-1"></i> Delete Entry
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="window.print()">
+          <i class="ti ti-printer me-1"></i> Print
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{# Delete Modal #}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{% url 'checkbook:delete' entry.pk %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Checkbook Entry</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete entry
+            <strong>{{ entry.reference_number }}</strong>?
+            This cannot be undone.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-sm btn-danger">Yes, Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,120 +1,133 @@
-{% extends "fault_logs/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Asset Fault Reports | IBS{% endblock %}
 
 {% block content %}
-<section class="panel">
-    <header class="panel-header">
-        <div>
-            <h1>IT Asset Fault or Damage Reports</h1>
-            <p>Centralized operational table for employee-reported IT asset issues.</p>
-        </div>
-        {% if mode != 'it' %}
-        <a class="btn btn--primary" href="{% url 'asset_faults:create' %}{% if mode %}?mode={{ mode }}{% endif %}">New Fault Report</a>
-        {% endif %}
-    </header>
+<div class="page-title-head d-flex align-items-center">
+  <div class="flex-grow-1 d-flex align-items-center">
+    <h4 class="fs-sm text-uppercase fw-bold m-0">Asset Faults</h4>
+  </div>
+  <div class="text-end">
+    <ol class="breadcrumb m-0 py-0">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item active">Asset Fault Reports</li>
+    </ol>
+  </div>
+</div>
 
-    <div class="table-wrap">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Ref No.</th>
-                    <th>REPORTED DATE</th>
-                    <th>Employee</th>
-                    <th>Job Title</th>
-                    <th>Asset Type</th>
-                    <th>Severity</th>
-                    <th>IT Signature</th>
-                    <th>RESOLUTION</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for record in records %}
-                    <tr>
-                        <td class="mono-text ref-cell">{{ record.reference_number }}</td>
-                        <td>{{ record.date|date:'D, F j, Y' }}</td>
-                        <td class="truncate-cell" title="{{ record.employee_name }}">{{ record.employee_name }}</td>
-                        <td>{{ record.job_title }}</td>
-                        <td>{{ record.asset_type }}</td>
-                        <td>
-                            {% if record.severity == 'high' %}
-                                <span class="status-badge danger">High</span>
-                            {% elif record.severity == 'medium' %}
-                                <span class="status-badge warning">Medium</span>
-                            {% else %}
-                                <span class="status-badge success">Low</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if record.it_signature %}
-                                <span class="status-badge success">Signed</span>
-                            {% else %}
-                                <span class="status-badge warning">Pending</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if record.resolution_date %}
-                                <span class="badge badge-success status-badge success">Resolved</span>
-                            {% else %}
-                                <span class="badge badge-secondary status-badge warning">Open</span>
-                            {% endif %}
-                        </td>
-                        <td class="actions-cell">
-                            <a
-                                href="{% url 'asset_faults:detail' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
-                                class="action-btn view-btn"
-                                aria-label="View fault report {{ record.reference_number }}"
-                                title="View"
-                            >
-                                <i class="fas fa-eye" aria-hidden="true"></i>
-                            </a>
-
-                            {% if mode != 'staff' and mode != 'it' and not record.it_signature %}
-                            <a
-                                href="{% url 'asset_faults:update' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
-                                class="action-btn edit-btn"
-                                aria-label="Edit fault report {{ record.reference_number }}"
-                                title="Edit"
-                            >
-                                <i class="fas fa-edit" aria-hidden="true"></i>
-                            </a>
-
-                            <a
-                                href="#"
-                                class="action-btn delete-btn js-delete-trigger"
-                                data-delete-url="{% url 'asset_faults:delete' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
-                                data-reference="{{ record.reference_number }}"
-                                data-delete-type="fault report"
-                                data-delete-button="Delete Report"
-                                aria-label="Delete fault report {{ record.reference_number }}"
-                                title="Delete"
-                            >
-                                <i class="fas fa-trash" aria-hidden="true"></i>
-                            </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="9" class="empty-row">No fault reports have been logged yet.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    {% if is_paginated %}
-        <nav class="pagination" aria-label="Asset fault report pagination">
-            {% if page_obj.has_previous %}
-                <a class="btn btn-secondary btn-sm" href="?{% if mode %}mode={{ mode }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
-            {% endif %}
-            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-            {% if page_obj.has_next %}
-                <a class="btn btn-secondary btn-sm" href="?{% if mode %}mode={{ mode }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Next</a>
-            {% endif %}
-        </nav>
+<div class="card border-5 border-white mt-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h5 class="mb-0">IT Asset Fault or Damage Reports</h5>
+    {% if mode != 'it' %}
+    <a href="{% url 'asset_faults:create' %}{% if mode %}?mode={{ mode }}{% endif %}" class="btn btn-primary btn-sm">
+      <i class="ti ti-plus me-1"></i> New Fault Report
+    </a>
     {% endif %}
-</section>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table id="table-1" class="table table-bordered table-striped align-middle mb-0">
+        <thead class="table-light text-uppercase small">
+          <tr>
+            <th>Ref No.</th>
+            <th>Date</th>
+            <th>Employee</th>
+            <th>Job Title</th>
+            <th>Asset Type</th>
+            <th>Severity</th>
+            <th>IT Signature</th>
+            <th>Resolution</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in records %}
+          <tr>
+            <td class="font-monospace fw-semibold">{{ record.reference_number }}</td>
+            <td>{{ record.date|date:'D, M j, Y' }}</td>
+            <td>{{ record.employee_name }}</td>
+            <td>{{ record.job_title }}</td>
+            <td>{{ record.get_asset_type_display }}</td>
+            <td>
+              {% if record.severity == 'high' %}
+                <span class="badge bg-danger">High</span>
+              {% elif record.severity == 'medium' %}
+                <span class="badge bg-warning text-dark">Medium</span>
+              {% else %}
+                <span class="badge bg-success">Low</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if record.it_signature %}
+                <span class="badge bg-success"><i class="ti ti-check me-1"></i>Signed</span>
+              {% else %}
+                <span class="badge bg-warning text-light"><i class="ti ti-clock me-1"></i>Pending</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if record.resolution_date %}
+                <span class="badge bg-success">Resolved</span>
+              {% else %}
+                <span class="badge bg-secondary">Open</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              <a href="{% url 'asset_faults:detail' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
+                 class="text-info text-xs" title="View"><i class="fas fa-eye"></i></a>
+              {% if mode != 'staff' and mode != 'it' and not record.it_signature %}
+              <span class="text-muted mx-1">|</span>
+              <a href="{% url 'asset_faults:update' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
+                 class="text-warning text-xs" title="Edit"><i class="fas fa-pencil"></i></a>
+              <span class="text-muted mx-1">|</span>
+              <a href="#" class="text-danger text-xs"
+                 data-bs-toggle="modal" data-bs-target="#deleteModal"
+                 data-delete-url="{% url 'asset_faults:delete' record.pk %}{% if mode %}?mode={{ mode }}{% endif %}"
+                 data-reference="{{ record.reference_number }}"
+                 title="Delete"><i class="fas fa-trash-can"></i></a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="9" class="text-center text-muted py-3">No fault reports have been logged yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{# Delete Modal #}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" id="deleteForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Fault Report</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete fault report <strong id="deleteRef"></strong>? This cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-sm btn-danger">Yes, Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.getElementById('deleteModal').addEventListener('show.bs.modal', function (e) {
+    var trigger = e.relatedTarget;
+    document.getElementById('deleteForm').action = trigger.dataset.deleteUrl;
+    document.getElementById('deleteRef').textContent = trigger.dataset.reference;
+  });
+</script>
 {% endblock %}

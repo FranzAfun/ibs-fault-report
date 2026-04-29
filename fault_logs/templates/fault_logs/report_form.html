@@ -1,135 +1,129 @@
 {% extends 'fault_logs/base.html' %}
 
 {% block title %}{% if object %}Update Fault Report{% else %}Submit Fault Report{% endif %} | IBS{% endblock %}
-
 {% block content %}
-<section class="panel document-panel">
-    <header class="panel-header">
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
         <div>
-            <h1>{% if object %}Update Fault Report{% else %}Fault Report Submission{% endif %}</h1>
+            <h5 class="card-title">{% if object %}Update Fault Report{% else %}Fault Report Submission{% endif %}</h5>
             <p>Structured document capture for IBS fault reporting and investigation tracking.</p>
         </div>
-        <a class="btn btn--secondary" href="{% url 'fault_logs:faultreport-list' %}">Back to Log</a>
-    </header>
+        <a class="btn btn-secondary" href="{% url 'fault_logs:faultreport-list' %}">Back to Log</a>
+    </div>
 
-    <form method="post" novalidate class="report-form" enctype="multipart/form-data">
+    <form method="post" novalidate enctype="multipart/form-data">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
-            <div class="error-box">
+            <div class="alert alert-danger mb-3">
                 {% for error in form.non_field_errors %}
                     <p>{{ error }}</p>
                 {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endif %}
 
-        <section class="document-section">
-            <h2>Report Identification</h2>
-            <div class="field-grid two-col">
-                <div class="field-block">
-                    <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
-                    {{ form.status }}
-                    {% for error in form.status.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <div class="card-body">
+            <h6 class="mb-3">Report Identification</h6>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label for="{{ form.status.id_for_label }}" class="form-label">{{ form.status.label }}</label>
+                    {{ form.status|add_class:"form-control select2-single" }}
+                    {% for error in form.status.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
                 </div>
-                <div class="field-block">
-                    <label for="{{ form.report_date.id_for_label }}">{{ form.report_date.label }}</label>
-                    {{ form.report_date }}
-                    {% for error in form.report_date.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                <div class="col-md-6">
+                    <label for="{{ form.report_date.id_for_label }}" class="form-label">{{ form.report_date.label }}</label>
+                    {{ form.report_date|add_class:"form-control" }}
+                    {% for error in form.report_date.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
                 </div>
-                <div class="field-block">
-                    <label for="{{ form.report_time.id_for_label }}">{{ form.report_time.label }}</label>
-                    {{ form.report_time }}
-                    {% for error in form.report_time.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                <div class="col-md-6">
+                    <label for="{{ form.report_time.id_for_label }}" class="form-label">{{ form.report_time.label }}</label>
+                    {{ form.report_time|add_class:"form-control" }}
+                    {% for error in form.report_time.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
                 </div>
-                <div class="field-block">
-                    <label for="{{ form.date_of_resolution.id_for_label }}">{{ form.date_of_resolution.label }}</label>
-                    {{ form.date_of_resolution }}
-                    {% for error in form.date_of_resolution.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
-                </div>
-            </div>
-        </section>
-
-        <section class="document-section">
-            <h2>Reporter Information</h2>
-            <div class="field-grid two-col">
-                <div class="field-block">
-                    <label for="{{ form.reporter_name.id_for_label }}">{{ form.reporter_name.label }}</label>
-                    {{ form.reporter_name }}
-                    {% for error in form.reporter_name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
-                </div>
-                <div class="field-block">
-                    <label for="{{ form.role.id_for_label }}">{{ form.role.label }}</label>
-                    {{ form.role }}
-                    {% for error in form.role.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
-                </div>
-                <div class="field-block">
-                    <label for="{{ form.reporter_contact.id_for_label }}">{{ form.reporter_contact.label }}</label>
-                    {{ form.reporter_contact }}
-                    {% for error in form.reporter_contact.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
-                </div>
-                <div class="field-block">
-                    <label for="{{ form.location.id_for_label }}">{{ form.location.label }}</label>
-                    {{ form.location }}
-                    {% for error in form.location.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                <div class="col-md-6">
+                    <label for="{{ form.date_of_resolution.id_for_label }}" class="form-label">{{ form.date_of_resolution.label }}</label>
+                    {{ form.date_of_resolution|add_class:"form-control" }}
+                    {% for error in form.date_of_resolution.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
                 </div>
             </div>
-        </section>
 
-        <section class="document-section">
-            <h2>Complaint and Resolution Details</h2>
-            <div class="field-grid one-col">
-                <div class="field-block">
-                    <label for="{{ form.complaint_summary.id_for_label }}">{{ form.complaint_summary.label }}</label>
-                    {{ form.complaint_summary }}
-                    {% for error in form.complaint_summary.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            <h6 class="mb-3">Reporter Information</h6>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label for="{{ form.reporter_name.id_for_label }}" class="form-label">{{ form.reporter_name.label }}</label>
+                    {{ form.reporter_name|add_class:"form-control" }}
+                    {% for error in form.reporter_name.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
                 </div>
-                <div class="field-block">
-                    <label for="{{ form.investigation_findings.id_for_label }}">{{ form.investigation_findings.label }}</label>
-                    {{ form.investigation_findings }}
-                    {% for error in form.investigation_findings.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                <div class="col-md-6">
+                    <label for="{{ form.role.id_for_label }}" class="form-label">{{ form.role.label }}</label>
+                    {{ form.role|add_class:"form-control select2-single" }}
+                    {% for error in form.role.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
                 </div>
-                <div class="field-block">
-                    <label for="{{ form.resolution.id_for_label }}">{{ form.resolution.label }}</label>
-                    {{ form.resolution }}
-                    {% for error in form.resolution.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                <div class="col-md-6">
+                    <label for="{{ form.reporter_contact.id_for_label }}" class="form-label">{{ form.reporter_contact.label }}</label>
+                    {{ form.reporter_contact|add_class:"form-control" }}
+                    {% for error in form.reporter_contact.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
                 </div>
-                <div class="field-block">
-                    <label for="{{ form.action_taken_by.id_for_label }}">{{ form.action_taken_by.label }}</label>
-                    {{ form.action_taken_by }}
-                    {% for error in form.action_taken_by.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                <div class="col-md-6">
+                    <label for="{{ form.location.id_for_label }}" class="form-label">{{ form.location.label }}</label>
+                    {{ form.location|add_class:"form-control select2-single" }}
+                    {% for error in form.location.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
                 </div>
             </div>
-        </section>
 
-        <section class="document-section">
-            <h2>Attachments</h2>
-            <p class="helper-text">Upload PDF, image, and common office files for this report.</p>
-            <div class="field-grid one-col">
-                <div class="field-block">
-                    <label for="{{ form.attachments.id_for_label }}">Supporting Files</label>
-                    {{ form.attachments }}
+            <h6 class="mb-3">Complaint and Resolution Details</h6>
+            <div class="row g-3 mb-4">
+                <div class="col-12">
+                    <label for="{{ form.complaint_summary.id_for_label }}" class="form-label">{{ form.complaint_summary.label }}</label>
+                    {{ form.complaint_summary|add_class:"form-control" }}
+                    {% for error in form.complaint_summary.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-12">
+                    <label for="{{ form.investigation_findings.id_for_label }}" class="form-label">{{ form.investigation_findings.label }}</label>
+                    {{ form.investigation_findings|add_class:"form-control" }}
+                    {% for error in form.investigation_findings.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-12">
+                    <label for="{{ form.resolution.id_for_label }}" class="form-label">{{ form.resolution.label }}</label>
+                    {{ form.resolution|add_class:"form-control" }}
+                    {% for error in form.resolution.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-12">
+                    <label for="{{ form.action_taken_by.id_for_label }}" class="form-label">{{ form.action_taken_by.label }}</label>
+                    {{ form.action_taken_by|add_class:"form-control" }}
+                    {% for error in form.action_taken_by.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+            </div>
+
+            <h6 class="mb-3">Attachments</h6>
+            <p class="form-text text-muted">Upload PDF, image, and common office files for this report.</p>
+            <div class="row g-3 mb-4">
+                <div class="col-12">
+                    <label for="{{ form.attachments.id_for_label }}" class="form-label">Supporting Files</label>
+                    {{ form.attachments|add_class:"form-control" }}
                     {% if form.attachments.help_text %}
-                        <p class="helper-text">{{ form.attachments.help_text }}</p>
+                        <div class="form-text">{{ form.attachments.help_text }}</div>
                     {% endif %}
-                    {% for error in form.attachments.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                    {% for error in form.attachments.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
                 </div>
             </div>
 
             {% if object %}
                 {% with existing_attachments=object.attachments.all %}
                     {% if existing_attachments %}
-                        <div class="attachment-list">
+                        <div class="list-group mb-3">
                             {% for attachment in existing_attachments %}
-                                <article class="attachment-item">
-                                    <div class="attachment-meta">
-                                        <h4 title="{{ attachment.filename }}">{{ attachment.filename }}</h4>
-                                        <p>{{ attachment.file_size_display }} • {{ attachment.uploaded_at|date:'D, M j, Y H:i' }}</p>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1" title="{{ attachment.filename }}">{{ attachment.filename }}</h6>
+                                        <small class="text-muted">{{ attachment.file_size_display }} • {{ attachment.uploaded_at|date:'D, M j, Y H:i' }}</small>
                                     </div>
-                                    <div class="attachment-actions">
-                                        <a class="btn btn--sm btn--ghost" href="{{ attachment.file.url }}" target="_blank" rel="noopener">Open</a>
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-outline-secondary" href="{{ attachment.file.url }}" target="_blank" rel="noopener">Open</a>
                                         <button
                                             type="button"
-                                            class="btn btn--sm btn--danger js-delete-trigger"
+                                            class="btn btn-sm btn-outline-danger js-delete-trigger"
                                             data-delete-url="{% url 'fault_logs:attachment-delete' attachment.pk %}"
                                             data-reference="{{ attachment.filename }}"
                                             data-delete-type="file attachment"
@@ -139,18 +133,26 @@
                                             Delete
                                         </button>
                                     </div>
-                                </article>
+                                </div>
                             {% endfor %}
                         </div>
                     {% endif %}
                 {% endwith %}
             {% endif %}
-        </section>
+        </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn--primary">{% if object %}Update Report{% else %}Submit Report{% endif %}</button>
-            <a class="btn btn--secondary" href="{% url 'fault_logs:faultreport-list' %}">Cancel</a>
+        <div class="card-footer d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-primary">{% if object %}Update Report{% else %}Submit Report{% endif %}</button>
+            <a class="btn btn-secondary" href="{% url 'fault_logs:faultreport-list' %}">Cancel</a>
         </div>
     </form>
-</section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    $(document).ready(function() {
+        $('.select2-single').select2();
+    });
+</script>
 {% endblock %}

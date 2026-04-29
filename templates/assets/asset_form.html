@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if object %}Update Asset Record{% else %}New Asset Record{% endif %} | IBS{% endblock %}
+
+{% block content %}
+<div class="page-title-head d-flex align-items-center">
+  <div class="flex-grow-1 d-flex align-items-center">
+    <h4 class="fs-sm text-uppercase fw-bold m-0">IT Asset Issue</h4>
+  </div>
+  <div class="text-end">
+    <ol class="breadcrumb m-0 py-0">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'assets:asset-list' %}{% if mode %}?mode={{ mode }}{% endif %}">IT Asset Records</a></li>
+      <li class="breadcrumb-item active">{% if object %}Update Record{% else %}New Record{% endif %}</li>
+    </ol>
+  </div>
+</div>
+
+{% if has_signed_items %}
+<div class="alert alert-warning mt-3">
+  <i class="ti ti-lock me-1"></i>
+  This asset record is locked because one or more items have been signed. Form submission is disabled.
+</div>
+{% endif %}
+
+<div class="card border-5 border-white mt-3" style="border-radius: 6px;">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h4>{% if object %}Update Asset Record{% else %}Asset Record Submission{% endif %}</h4>
+    <a href="{% url 'assets:asset-list' %}{% if mode %}?mode={{ mode }}{% endif %}"
+       class="btn btn-outline-primary btn-sm" title="Back to list">
+      <i class="ti ti-arrow-left me-1"></i> List
+    </a>
+  </div>
+
+  <div class="card-body">
+
+    <div class="alert alert-info mb-4">
+      <p class="mb-1">The IT assets listed below have been issued to the named employee in accordance with company IT asset management procedures.</p>
+      <p class="mb-1 mt-2 fw-semibold">The employee is responsible to:</p>
+      <ul class="mb-1">
+        <li>Take reasonable care of the IT assets provided</li>
+        <li>Use assets following training and instructions given</li>
+        <li>Keep assets clean, secure, and return them when required</li>
+        <li>Report any loss, theft, or defect immediately</li>
+      </ul>
+      <p class="mb-0 fst-italic small">Note: Any assets issued must be returned on demand by an appropriate authority.</p>
+    </div>
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {% for error in form.non_field_errors %}<p class="mb-0">{{ error }}</p>{% endfor %}
+    </div>
+    {% endif %}
+
+    {% if formset.non_form_errors %}
+    <div class="alert alert-danger">
+      {% for error in formset.non_form_errors %}<p class="mb-0">{{ error }}</p>{% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" novalidate class="needs-validation">
+      {% csrf_token %}
+
+      {# ---- Employee Information ---- #}
+      <div class="card mb-3">
+        <div class="card-header bg-light">
+          <h6 class="mb-0">Employee Information</h6>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="{{ form.employee_name.id_for_label }}" class="form-label fw-semibold">
+                {{ form.employee_name.label }} <span class="text-danger">*</span>
+              </label>
+              {{ form.employee_name }}
+              {% for error in form.employee_name.errors %}
+              <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-4">
+              <label for="{{ form.project.id_for_label }}" class="form-label fw-semibold">
+                {{ form.project.label }} <span class="text-danger">*</span>
+              </label>
+              {{ form.project }}
+              {% for error in form.project.errors %}
+              <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-4">
+              <label for="{{ form.job_title.id_for_label }}" class="form-label fw-semibold">
+                {{ form.job_title.label }} <span class="text-danger">*</span>
+              </label>
+              {{ form.job_title }}
+              {% for error in form.job_title.errors %}
+              <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# ---- Asset Items ---- #}
+      <div class="card mb-3">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">Asset Items</h6>
+          <button type="button" id="add-item" class="btn btn-sm btn-outline-primary">
+            <i class="ti ti-plus me-1"></i> Add Item
+          </button>
+        </div>
+        <div class="card-body p-2">
+          {{ formset.management_form }}
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle mb-0">
+              <thead class="table-light text-uppercase small">
+                <tr>
+                  <th>Asset Type</th>
+                  <th>Date Issued</th>
+                  <th>Issued By</th>
+                  <th class="text-center" style="width: 60px;"></th>
+                </tr>
+              </thead>
+              <tbody id="asset-items-body">
+                {% for item_form in formset %}
+                <tr class="asset-item-row">
+                  <td>
+                    {{ item_form.asset_type }}
+                    {% for error in item_form.asset_type.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {{ item_form.date_issued }}
+                    {% for error in item_form.date_issued.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {{ item_form.issued_by }}
+                    {% for error in item_form.issued_by.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </td>
+                  <td class="text-center">
+                    <span style="display:none;">{{ item_form.id }}{{ item_form.DELETE }}</span>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-row" title="Remove">
+                      <i class="ti ti-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {# ---- Approval Section ---- #}
+      <div class="card mb-3">
+        <div class="card-header bg-light">
+          <h6 class="mb-0">Approval Section</h6>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="{{ form.approved_by.id_for_label }}" class="form-label fw-semibold">
+                {{ form.approved_by.label }}
+              </label>
+              {{ form.approved_by }}
+              {% for error in form.approved_by.errors %}
+              <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-6">
+              <label for="{{ form.approval_date.id_for_label }}" class="form-label fw-semibold">
+                {{ form.approval_date.label }}
+              </label>
+              {{ form.approval_date }}
+              {% for error in form.approval_date.errors %}
+              <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary" {% if has_signed_items %}disabled{% endif %}>
+          <i class="ti ti-device-floppy me-1"></i>
+          {% if object %}Update Record{% else %}Submit Record{% endif %}
+        </button>
+        <a href="{% url 'assets:asset-list' %}{% if mode %}?mode={{ mode }}{% endif %}" class="btn btn-secondary">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{# Empty form template for JS row cloning #}
+<script type="text/template" id="empty-form-template">
+  <tr class="asset-item-row">
+    <td>
+      {{ formset.empty_form.asset_type }}
+    </td>
+    <td>
+      {{ formset.empty_form.date_issued }}
+    </td>
+    <td>
+      {{ formset.empty_form.issued_by }}
+    </td>
+    <td class="text-center">
+      <span style="display:none;">{{ formset.empty_form.id }}{{ formset.empty_form.DELETE }}</span>
+      <button type="button" class="btn btn-sm btn-outline-danger remove-row" title="Remove">
+        <i class="ti ti-trash"></i>
+      </button>
+    </td>
+  </tr>
+</script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const addBtn = document.getElementById("add-item");
+  const tableBody = document.getElementById("asset-items-body");
+  const totalForms = document.getElementById("id_items-TOTAL_FORMS");
+  const emptyTemplate = document.getElementById("empty-form-template");
+
+  function visibleRowCount() {
+    return Array.from(tableBody.querySelectorAll(".asset-item-row"))
+      .filter(function (r) { return r.style.display !== "none"; }).length;
+  }
+
+  addBtn.addEventListener("click", function () {
+    const formIdx = parseInt(totalForms.value, 10);
+    const markup = emptyTemplate.innerHTML.replace(/__prefix__/g, formIdx);
+    const tmp = document.createElement("tbody");
+    tmp.innerHTML = markup.trim();
+    tableBody.appendChild(tmp.firstElementChild);
+    totalForms.value = formIdx + 1;
+  });
+
+  tableBody.addEventListener("click", function (e) {
+    const btn = e.target.closest(".remove-row");
+    if (!btn) return;
+    const row = btn.closest("tr");
+    if (!row) return;
+    if (visibleRowCount() <= 1) return;
+    const deleteInput = row.querySelector('input[name$="-DELETE"]');
+    const idInput = row.querySelector('input[name$="-id"]');
+    if (idInput && idInput.value && deleteInput) {
+      deleteInput.checked = true;
+      row.style.display = "none";
+    } else {
+      row.remove();
+    }
+  });
+});
+</script>
+{% endblock %}

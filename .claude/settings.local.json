@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python manage.py makemigrations fault_logs --name auto_reference_number)"
+      "Bash(python manage.py makemigrations fault_logs --name auto_reference_number)",
+      "Bash(awk '{print $NF}')",
+      "Bash(.venv/Scripts/pip install *)",
+      "Bash(.venv/Scripts/python --version)",
+      "Bash(.venv/Scripts/python manage.py makemigrations assets --name asset_type_choices)",
+      "Bash(.venv/Scripts/python manage.py check)",
+      "Bash(.venv/Scripts/python manage.py migrate)",
+      "Bash(python manage.py findstatic assets/css/vendors.min.css)",
+      "Bash(python manage.py findstatic assets/js/tables.js assets/plugins/datatables/dataTables.min.js assets/fontawsome/css/all.min.css)",
+      "Bash(python manage.py check)"
     ]
   }
 }

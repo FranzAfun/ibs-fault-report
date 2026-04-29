@@ -2,70 +2,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}IBS Operations System{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'fault_logs/css/fault_logs.css' %}">
-    {% block extra_head %}{% endblock %}
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <title>{% block title %}IBS Operations System{% endblock %}</title>
+  <link href="{% static 'assets/images/logo-sm.png' %}" rel="shortcut icon">
+  <script src="{% static 'assets/js/config.js' %}"></script>
+  <link href="{% static 'assets/fontawsome/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'assets/css/vendors.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'assets/css/app.min.css' %}" rel="stylesheet" type="text/css">
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <header class="site-header">
-        <div class="site-header-inner">
-            <a href="{% url 'dashboard' %}" class="brand brand-link">IBS Operations System</a>
-            <nav class="main-nav" aria-label="Primary">
-                <a href="{% url 'fault_logs:faultreport-list' %}">Report Log</a>
-                <a href="{% url 'ppe_records:ppe-list' %}">PPE Log</a>
-                <a href="{% url 'assets:asset-list' %}">Assets Log</a>
-                <a href="{% url 'asset_faults:list' %}">Asset Faults Log</a>
-                <a href="{% url 'checkbook:list' %}">Checkbook Log</a>
-            </nav>
-        </div>
-    </header>
 
-    <main class="page-shell">
-        {% if messages %}
-            <section class="messages" aria-label="Notifications">
-                {% for message in messages %}
-                    <div class="message message-{{ message.tags|default:'info' }}">{{ message }}</div>
-                {% endfor %}
-            </section>
-        {% endif %}
+  <div class="wrapper">
 
-        {% block content %}{% endblock %}
-    </main>
+    <!-- Sidenav -->
+    <div class="sidenav-menu">
+      <a class="logo" href="{% url 'dashboard' %}">
+        <span class="logo logo-light">
+          <span class="logo-lg"><img alt="logo" src="{% static 'assets/images/logo.png' %}"></span>
+          <span class="logo-sm"><img alt="logo" src="{% static 'assets/images/logo-sm.png' %}"></span>
+        </span>
+        <span class="logo logo-dark">
+          <span class="logo-lg"><img alt="logo" src="{% static 'assets/images/logo-black.png' %}"></span>
+          <span class="logo-sm"><img alt="logo" src="{% static 'assets/images/logo-sm.png' %}"></span>
+        </span>
+      </a>
+      <button class="button-close-offcanvas"><i class="ti ti-x align-middle"></i></button>
+      <div class="scrollbar" data-simplebar="">
+        <ul class="side-nav">
 
+          <li class="side-nav-title">Navigation</li>
 
-    <div id="deleteConfirmModal" class="confirm-modal" hidden>
-        <div class="confirm-modal-panel" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
-            <div class="confirm-modal-header">
-                <h2 id="delete-modal-title">Confirm Delete</h2>
-            </div>
-            <div class="confirm-modal-body">
-                <p>
-                    You are about to delete <span id="delete-modal-target-type">item</span>
-                    <strong id="delete-modal-reference"></strong>.
-                    This action cannot be undone.
-                </p>
-            </div>
-            <div class="confirm-modal-actions">
-                <button type="button" class="btn btn--secondary js-modal-cancel">Cancel</button>
-                <form id="deleteConfirmForm" method="post">
-                    {% csrf_token %}
-                    <input id="delete-modal-next" type="hidden" name="next" value="">
-                    <button id="delete-modal-submit" type="submit" class="btn btn--danger">Delete</button>
-                </form>
-            </div>
-        </div>
+          <li class="side-nav-item">
+            <a class="side-nav-link" href="{% url 'dashboard' %}">
+              <span class="menu-icon"><i class="fas fa-layer-group"></i></span>
+              <span class="menu-text">Dashboard</span>
+            </a>
+          </li>
+
+          <li class="side-nav-item">
+            <a class="side-nav-link" href="{% url 'fault_logs:faultreport-list' %}">
+              <span class="menu-icon"><i class="fas fa-exclamation-triangle"></i></span>
+              <span class="menu-text">Fault Reports</span>
+            </a>
+          </li>
+
+          <li class="side-nav-item">
+            <a class="side-nav-link" href="{% url 'ppe_records:ppe-list' %}">
+              <span class="menu-icon"><i class="fas fa-hard-hat"></i></span>
+              <span class="menu-text">PPE Issue Log</span>
+            </a>
+          </li>
+
+          <li class="side-nav-item">
+            <a class="side-nav-link" href="{% url 'assets:asset-list' %}">
+              <span class="menu-icon"><i class="fas fa-laptop"></i></span>
+              <span class="menu-text">IT Assets</span>
+            </a>
+          </li>
+
+          <li class="side-nav-item">
+            <a class="side-nav-link" href="{% url 'asset_faults:list' %}">
+              <span class="menu-icon"><i class="fas fa-tools"></i></span>
+              <span class="menu-text">Asset Faults</span>
+            </a>
+          </li>
+
+          <li class="side-nav-item">
+            <a class="side-nav-link" href="{% url 'checkbook:list' %}">
+              <span class="menu-icon"><i class="fas fa-book"></i></span>
+              <span class="menu-text">Checkbook</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
     </div>
+    <!-- End Sidenav -->
 
-    <script src="{% static 'fault_logs/js/delete_confirm_modal.js' %}"></script>
-    {% block extra_scripts %}{% endblock %}
+    <div class="page-content">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-item">
+            <button class="topbar-link button-toggle-menu">
+              <i class="ti ti-menu-2 fs-22 align-middle"></i>
+            </button>
+          </div>
+          <div class="topbar-item d-none d-md-flex">
+            <span class="fw-semibold text-muted">IBS Operations System</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-item">
+            <a class="topbar-link" href="{% url 'dashboard' %}" title="Dashboard">
+              <i class="ti ti-home fs-22 align-middle"></i>
+            </a>
+          </div>
+        </div>
+      </header>
+      <!-- End Topbar -->
+
+      <div class="page-container">
+        <div class="container-fluid">
+
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded mt-2" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          {% block content %}{% endblock %}
+
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12 text-center">
+              <span class="fw-semibold">IBS Operations Management System</span> &copy; 2026 | v1.4.17
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+    <!-- End page-content -->
+
+  </div>
+  <!-- End wrapper -->
+
+  <script src="{% static 'assets/js/vendors.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/dataTables.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/dataTables.bootstrap5.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/dataTables.responsive.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/responsive.bootstrap5.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/buttons.bootstrap5.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/jszip.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/pdfmake.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/vfs_fonts.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/buttons.print.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables/dataTables.select.min.js' %}"></script>
+  <script src="{% static 'assets/js/tables.js' %}"></script>
+  <script src="{% static 'assets/fontawsome/js/all.min.js' %}"></script>
+  <script src="{% static 'assets/js/app.js' %}"></script>
+  {% block extra_scripts %}{% endblock %}
+
 </body>
-    <footer class="site-footer">
-        <p>IBS Operations Management System 2026 | Fault Report Log • PPE Issue Log • IT Assets Issue Log • IT Asset Fault Log • Checkbook Log | v1.4.17</p>
-    </footer>
 </html>

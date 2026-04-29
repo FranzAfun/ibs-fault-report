@@ -1,110 +1,111 @@
-{% extends "fault_logs/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Checkbook Register | IBS{% endblock %}
 
 {% block content %}
-<section class="panel checkbook-register">
-    <header class="panel-header">
-        <div>
-            <h1>Checkbook Register</h1>
-            <p>Centralized operational table for checkbook transactions.</p>
-        </div>
-        <a class="btn btn--primary" href="{% url 'checkbook:create' %}">New Entry</a>
-    </header>
+<div class="page-title-head d-flex align-items-center">
+  <div class="flex-grow-1 d-flex align-items-center">
+    <h4 class="fs-sm text-uppercase fw-bold m-0">Checkbook</h4>
+  </div>
+  <div class="text-end">
+    <ol class="breadcrumb m-0 py-0">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item active">Checkbook Register</li>
+    </ol>
+  </div>
+</div>
 
-    <div class="table-wrap checkbook-table-wrap">
-        <table class="data-table checkbook-table">
-            <colgroup>
-                <col class="checkbook-col-ref">
-                <col class="checkbook-col-date">
-                <col class="checkbook-col-code">
-                <col class="checkbook-col-num">
-                <col class="checkbook-col-description">
-                <col class="checkbook-col-category">
-                <col class="checkbook-col-money">
-                <col class="checkbook-col-money">
-                <col class="checkbook-col-money">
-                <col class="checkbook-col-actions">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th class="text-center">Ref No.</th>
-                    <th class="text-center">Date</th>
-                    <th class="text-center">Ref Code</th>
-                    <th class="text-center">Num</th>
-                    <th>Description</th>
-                    <th class="text-center">Category</th>
-                    <th class="text-end">WITHDRAWAL (GHS)</th>
-                    <th class="text-end">DEPOSIT (GHS)</th>
-                    <th class="text-end">BALANCE (GHS)</th>
-                    <th class="text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for entry in entries %}
-                    <tr>
-                        <td class="mono-text ref-cell text-center">{{ entry.reference_number }}</td>
-                        <td class="text-center">{{ entry.date|date:'D, F j, Y' }}</td>
-                        <td class="text-center">{{ entry.ref_code|default:'-' }}</td>
-                        <td class="text-center">{{ entry.num|default:'-' }}</td>
-                        <td class="truncate-cell" title="{{ entry.description }}">{{ entry.description }}</td>
-                        <td class="text-center">{{ entry.category|default:'-' }}</td>
-                        <td class="text-end">{{ entry.withdrawal_amount|default:"-" }}</td>
-                        <td class="text-end">{{ entry.deposit_amount|default:"-" }}</td>
-                        <td class="text-end fw-semibold">{{ entry.balance }}</td>
-                        <td class="actions-cell">
-                            <a
-                                href="{% url 'checkbook:detail' entry.pk %}"
-                                class="action-btn view-btn"
-                                aria-label="View checkbook entry {{ entry.reference_number }}"
-                                title="View"
-                            >
-                                <i class="fas fa-eye" aria-hidden="true"></i>
-                            </a>
-
-                            <a
-                                href="{% url 'checkbook:update' entry.pk %}"
-                                class="action-btn edit-btn"
-                                aria-label="Edit checkbook entry {{ entry.reference_number }}"
-                                title="Edit"
-                            >
-                                <i class="fas fa-edit" aria-hidden="true"></i>
-                            </a>
-
-                            <a
-                                href="#"
-                                class="action-btn delete-btn js-delete-trigger"
-                                data-delete-url="{% url 'checkbook:delete' entry.pk %}"
-                                data-reference="{{ entry.reference_number }}"
-                                data-delete-type="checkbook entry"
-                                data-delete-button="Delete Entry"
-                                aria-label="Delete checkbook entry {{ entry.reference_number }}"
-                                title="Delete"
-                            >
-                                <i class="fas fa-trash" aria-hidden="true"></i>
-                            </a>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="10" class="empty-row">No checkbook entries have been logged yet.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="card border-5 border-white mt-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h5 class="mb-0">Checkbook Register</h5>
+    <a href="{% url 'checkbook:create' %}" class="btn btn-primary btn-sm">
+      <i class="ti ti-plus me-1"></i> New Entry
+    </a>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table id="table-1" class="table table-bordered table-striped align-middle mb-0">
+        <thead class="table-light text-uppercase small">
+          <tr>
+            <th>Ref No.</th>
+            <th>Date</th>
+            <th>Ref Code</th>
+            <th>Num</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th class="text-end">Withdrawal (GHS)</th>
+            <th class="text-end">Deposit (GHS)</th>
+            <th class="text-end">Balance (GHS)</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in entries %}
+          <tr>
+            <td class="font-monospace fw-semibold">{{ entry.reference_number }}</td>
+            <td>{{ entry.date|date:'D, M j, Y' }}</td>
+            <td>{{ entry.ref_code|default:'-' }}</td>
+            <td>{{ entry.num|default:'-' }}</td>
+            <td>{{ entry.description|truncatechars:60 }}</td>
+            <td>{{ entry.category|default:'-' }}</td>
+            <td class="text-end">{{ entry.withdrawal_amount|default:'-' }}</td>
+            <td class="text-end">{{ entry.deposit_amount|default:'-' }}</td>
+            <td class="text-end fw-semibold">{{ entry.balance }}</td>
+            <td class="text-center">
+              <a href="{% url 'checkbook:detail' entry.pk %}"
+                 class="text-info text-xs" title="View"><i class="fas fa-eye"></i></a>
+              <span class="text-muted mx-1">|</span>
+              <a href="{% url 'checkbook:update' entry.pk %}"
+                 class="text-warning text-xs" title="Edit"><i class="fas fa-pencil"></i></a>
+              <span class="text-muted mx-1">|</span>
+              <a href="#" class="text-danger text-xs"
+                 data-bs-toggle="modal" data-bs-target="#deleteModal"
+                 data-delete-url="{% url 'checkbook:delete' entry.pk %}"
+                 data-reference="{{ entry.reference_number }}"
+                 title="Delete"><i class="fas fa-trash-can"></i></a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="10" class="text-center text-muted py-3">No checkbook entries have been logged yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
+</div>
 
-    {% if is_paginated %}
-        <nav class="pagination" aria-label="Checkbook entry pagination">
-            {% if page_obj.has_previous %}
-                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-            {% endif %}
-            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-            {% if page_obj.has_next %}
-                <a class="btn btn--sm btn--secondary" href="?page={{ page_obj.next_page_number }}">Next</a>
-            {% endif %}
-        </nav>
-    {% endif %}
-</section>
+{# Delete Modal #}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" id="deleteForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Checkbook Entry</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete entry <strong id="deleteRef"></strong>? This cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-sm btn-danger">Yes, Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.getElementById('deleteModal').addEventListener('show.bs.modal', function (e) {
+    var trigger = e.relatedTarget;
+    document.getElementById('deleteForm').action = trigger.dataset.deleteUrl;
+    document.getElementById('deleteRef').textContent = trigger.dataset.reference;
+  });
+</script>
 {% endblock %}
